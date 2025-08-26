@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+const nextConfig = {
+    output: 'export',
+    images: {
+      unoptimized: true,
+    },
+    basePath: '/makeovers-by-bhuvita', // Replace with your repository name
+    assetPrefix: '/makeovers-by-bhuvita/', // Replace with your repository name
+  }
+  
+  module.exports = nextConfig
