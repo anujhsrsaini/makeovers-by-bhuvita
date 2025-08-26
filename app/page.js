@@ -7,14 +7,20 @@ const MakeoversByBhuvita = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
+    // Helper function for image paths
+    const getImagePath = (path) => {
+      const basePath = process.env.NODE_ENV === 'production' ? '/makeovers-by-bhuvita' : '';
+      return basePath + path;
+    };
+
   // Portfolio images - replace with actual images
   const portfolioImages = [
-    { id: 1, url: '/portfolio/1.jpeg', category: 'Traditional', description: 'Traditional Bridal Look' },
-    { id: 2, url: '/portfolio/1.HEIC', category: 'Contemporary', description: 'Modern Bride Makeup' },
-    { id: 3, url: '/portfolio/3.jpeg', category: 'Reception', description: 'Reception Glam' },
-    { id: 4, url: '/portfolio/4.jpeg', category: 'Mehendi', description: 'Mehendi Ceremony Look' },
-    { id: 5, url: '/portfolio/5.jpeg', category: 'Sangeet', description: 'Sangeet Night Glam' },
-    { id: 6, url: '/portfolio/6.jpeg', category: 'Traditional', description: 'South Indian Bridal' }
+    { id: 1, url: getImagePath('/portfolio/1.jpeg'), category: 'Traditional', description: 'Traditional Bridal Look' },
+    { id: 2, url: getImagePath('/portfolio/1.HEIC'), category: 'Contemporary', description: 'Modern Bride Makeup' },
+    { id: 3, url: getImagePath('/portfolio/3.jpeg'), category: 'Reception', description: 'Reception Glam' },
+    { id: 4, url: getImagePath('/portfolio/4.jpeg'), category: 'Mehendi', description: 'Mehendi Ceremony Look' },
+    { id: 5, url: getImagePath('/portfolio/5.jpeg'), category: 'Sangeet', description: 'Sangeet Night Glam' },
+    { id: 6, url: getImagePath('/portfolio/6.jpeg'), category: 'Traditional', description: 'South Indian Bridal' }
   ];
 
   const testimonials = [
@@ -185,7 +191,7 @@ const MakeoversByBhuvita = () => {
             </div>
             <div className="relative">
               <div className="w-full h-96 md:h-[600px] bg-gradient-to-br from-[#D4A574] to-[#C19A6B] rounded-2xl overflow-hidden shadow-2xl">
-                <img src="/hero-image.jpeg" alt="Bridal Makeup" className="w-full h-full object-cover object-top" />
+                <img src={getImagePath('/hero-image.jpeg')} alt="Bridal Makeup" className="w-full h-full object-cover object-top" />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg">
                 <div className="flex items-center gap-2">
