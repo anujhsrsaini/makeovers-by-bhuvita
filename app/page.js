@@ -16,11 +16,13 @@ const MakeoversByBhuvita = () => {
   // Portfolio images - replace with actual images
   const portfolioImages = [
     { id: 1, url: getImagePath('/portfolio/1.jpeg'), category: 'Traditional', description: 'Traditional Bridal Look' },
-    { id: 2, url: getImagePath('/portfolio/1.HEIC'), category: 'Contemporary', description: 'Modern Bride Makeup' },
+    { id: 2, url: getImagePath('/portfolio/2.jpeg'), category: 'Contemporary', description: 'Modern Bride Makeup' },
     { id: 3, url: getImagePath('/portfolio/3.jpeg'), category: 'Reception', description: 'Reception Glam' },
-    { id: 4, url: getImagePath('/portfolio/4.jpeg'), category: 'Mehendi', description: 'Mehendi Ceremony Look' },
-    { id: 5, url: getImagePath('/portfolio/5.jpeg'), category: 'Sangeet', description: 'Sangeet Night Glam' },
-    { id: 6, url: getImagePath('/portfolio/6.jpeg'), category: 'Traditional', description: 'South Indian Bridal' }
+    { id: 4, url: getImagePath('/portfolio/4.jpeg'), category: 'Mehendi', description: 'Traditional Bridal Look' },
+    { id: 5, url: getImagePath('/portfolio/5.jpeg'), category: 'Sangeet', description: 'Punjabi Bridal Look' },
+    { id: 6, url: getImagePath('/portfolio/6.jpeg'), category: 'Traditional', description: 'Traditional Bridal Look' },
+    { id: 7, url: getImagePath('/portfolio/7.jpeg'), category: 'Engagement', description: 'Modern Engagement Look' },
+    { id: 8, url: getImagePath('/portfolio/8.jpeg'), category: 'Traditional', description: 'South Indian Bridal' },
   ];
 
   const testimonials = [
@@ -442,13 +444,13 @@ const MakeoversByBhuvita = () => {
 
               <div className="flex flex-col md:flex-row justify-around text-center md:text-left gap-6">
                   <a 
-                    href="https://wa.me/919876543210?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20bridal%20makeup%20services" 
+                    href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20bridal%20makeup%20services" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center justify-center md:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
                   >
                     <MessageCircle className="h-5 w-5 text-[#8B6F47]" />
-                    <span>+91 98765 43210</span>
+                    <span>+91 78888 08231</span>
                   </a>
                   <a 
                     href="https://www.instagram.com/makeoversbybhuvita" 
