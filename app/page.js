@@ -161,7 +161,7 @@ const MakeoversByBhuvita = () => {
 
   const stats = [
     { number: "200+", label: "Happy Brides" },
-    { number: "8+", label: "Years Experience" },
+    { number: "3+", label: "Years Experience" },
     { number: "50+", label: "Destination Weddings" },
     { number: "4.9\u2605", label: "Average Rating" },
   ];
