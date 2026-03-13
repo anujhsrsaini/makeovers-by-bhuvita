@@ -282,7 +282,7 @@ const MakeoversByBhuvita = () => {
                 Making Your <span className="text-[#8B6F47]">Dream Day</span> Beautiful
               </h2>
               <p className="text-xl text-gray-600 mb-8">
-                Professional bridal makeup artist specializing in creating stunning, personalized looks for your special day
+                Professional bridal makeup artist in Chandigarh, Mohali &amp; Panchkula — creating stunning, personalized looks for your special day
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <a href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20makeup%20services"  
@@ -474,7 +474,7 @@ const MakeoversByBhuvita = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">Services & Pricing</h2>
-            <p className="text-lg text-gray-600">Tailored packages for your perfect day</p>
+            <p className="text-lg text-gray-600">Tailored bridal, party &amp; engagement makeup packages in Chandigarh Tricity</p>
           </div>
 
           {/* Service Comparison Helper */}
@@ -675,7 +675,7 @@ const MakeoversByBhuvita = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
-            <p className="text-lg text-gray-600">Let&apos;s make your special day unforgettable</p>
+            <p className="text-lg text-gray-600">Book your bridal makeup consultation in Chandigarh, Mohali &amp; Panchkula</p>
           </div>
 
           <div className="max-w-3xl mx-auto">
