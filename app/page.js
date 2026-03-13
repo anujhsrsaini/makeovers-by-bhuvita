@@ -167,7 +167,7 @@ const MakeoversByBhuvita = () => {
   ];
 
   const trustBadges = [
-    { icon: Sparkles, label: "MAC & Bobbi Brown Products" },
+    { icon: Sparkles, label: "MAC, Bobbi Brown, Charlotte Tilbury, Huda Beauty & NARS Products" },
     { icon: Shield, label: "Internationally Certified MUA" },
     { icon: Star, label: "UV Ghai Certified" },
     { icon: Heart, label: "Hygiene First" },
