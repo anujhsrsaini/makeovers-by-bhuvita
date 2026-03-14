@@ -37,3 +37,84 @@ html {
 .animate-pulse-slow {
   animation: pulseSlow 2s ease-in-out infinite;
 }
+
+/* Scroll-triggered slide up animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+/* Floating animation for hero badge */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Shimmer effect for hero image border */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #D4A574, #F5E6D3, #D4A574, #8B6F47, #D4A574);
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Counter bounce at completion */
+@keyframes countBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.animate-count-bounce {
+  animation: countBounce 0.4s ease-out;
+}
+
+/* Gradient text utility */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #8B6F47 0%, #D4A574 50%, #8B6F47 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Golden glow for buttons on hover */
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(139, 111, 71, 0.3), 0 0 40px rgba(139, 111, 71, 0.1);
+}
+
+/* Golden border glow for portfolio images */
+.hover-golden-glow:hover {
+  box-shadow: 0 0 25px rgba(212, 165, 116, 0.4), 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Active button press */
+.active-press:active {
+  transform: scale(0.95);
+}
+
+/* Stagger animation delays for children */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 200ms; }
+.stagger-4 { animation-delay: 300ms; }
+.stagger-5 { animation-delay: 400ms; }
+.stagger-6 { animation-delay: 500ms; }
+.stagger-7 { animation-delay: 600ms; }
+.stagger-8 { animation-delay: 700ms; }
