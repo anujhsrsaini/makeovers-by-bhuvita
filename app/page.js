@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Menu, X, Instagram, MessageCircle, Phone, Mail, Star, ChevronLeft, ChevronRight, ChevronDown, Calendar, Palette, Heart, Shield, Clock, Sparkles, ArrowUp } from 'lucide-react';
+import { Menu, X, Instagram, MessageCircle, Phone, Mail, Star, ChevronLeft, ChevronRight, ChevronDown, Calendar, Palette, Heart, Shield, Clock, Sparkles, ArrowUp, MapPin } from 'lucide-react';
 import portfolioData from '../public/portfolio/portfolio.json';
 
 // Custom hook for scroll-triggered animations
@@ -51,6 +51,7 @@ const MakeoversByBhuvita = () => {
 
   // Section refs for scroll animations
   const statsRef = useRef(null);
+  const aboutRef = useRef(null);
   const portfolioRef = useRef(null);
   const processRef = useRef(null);
   const servicesRef = useRef(null);
@@ -60,6 +61,7 @@ const MakeoversByBhuvita = () => {
 
   // Track in-view state
   const statsInView = useInView(statsRef);
+  const aboutInView = useInView(aboutRef);
   const portfolioInView = useInView(portfolioRef);
   const processInView = useInView(processRef);
   const servicesInView = useInView(servicesRef);
@@ -88,7 +90,7 @@ const MakeoversByBhuvita = () => {
   // Animated stats counter
   useEffect(() => {
     if (!statsInView || statsAnimDone) return;
-    const targets = [200, 3, 50, 4.9];
+    const targets = [200, 5, 50, 4.9];
     const duration = 1500;
     const startTime = performance.now();
     const animate = (now) => {
@@ -135,6 +137,9 @@ const MakeoversByBhuvita = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightboxImage]);
 
+  // ⚠️ PLACEHOLDER TESTIMONIALS — replace with REAL client reviews (WhatsApp/Instagram
+  // screenshots or Google reviews). Fake reviews hurt credibility and trust. Keep names,
+  // events and quotes truthful. Once real reviews exist, also re-add aggregateRating in layout.js.
   const testimonials = [
     {
       id: 1,
@@ -237,15 +242,15 @@ const MakeoversByBhuvita = () => {
 
   const stats = [
     { number: "200+", label: "Happy Brides" },
-    { number: "3+", label: "Years Experience" },
+    { number: "5+", label: "Years Experience" },
     { number: "50+", label: "Destination Weddings" },
     { number: "4.9\u2605", label: "Average Rating" },
   ];
 
   const trustBadges = [
-    { icon: Sparkles, label: "MAC, Bobbi Brown, Charlotte Tilbury, Huda Beauty & NARS Products" },
-    { icon: Shield, label: "Internationally Certified MUA" },
-    { icon: Star, label: "UV Ghai Certified" },
+    { icon: Star, label: "UV Ghai Certified MUA" },
+    { icon: Sparkles, label: "Specialised in Subtle, Skin-Like Makeup" },
+    { icon: Palette, label: "MAC, Bobbi Brown, Charlotte Tilbury, Huda Beauty & NARS Products" },
     { icon: Heart, label: "Hygiene First" },
     { icon: Clock, label: "On-Time Guarantee" },
   ];
@@ -330,6 +335,7 @@ const MakeoversByBhuvita = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8">
               <a href="#home" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Home</a>
+              <a href="#about" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">About</a>
               <a href="#portfolio" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Portfolio</a>
               <a href="#services" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Services</a>
               <a href="#testimonials" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Testimonials</a>
@@ -352,6 +358,7 @@ const MakeoversByBhuvita = () => {
         }`}>
           <div className="px-2 pt-2 pb-3 space-y-1">
             <a href="#home" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Home</a>
+            <a href="#about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">About</a>
             <a href="#portfolio" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Portfolio</a>
             <a href="#services" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Services</a>
             <a href="#testimonials" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Testimonials</a>
@@ -373,7 +380,7 @@ const MakeoversByBhuvita = () => {
                 Making Your <span className="text-gradient-gold">Dream Day</span> Beautiful
               </h2>
               <p className="text-xl text-gray-600 mb-8">
-                Professional bridal makeup artist in Chandigarh, Mohali &amp; Panchkula — creating stunning, personalized looks for your special day
+                UV Ghai&ndash;certified bridal makeup artist in Chandigarh, Mohali &amp; Panchkula &mdash; specialising in <span className="font-semibold text-[#8B6F47]">subtle, skin-like makeup</span> that enhances your natural beauty for your special day
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <a href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20makeup%20services"
@@ -437,8 +444,51 @@ const MakeoversByBhuvita = () => {
         </div>
       </section>
 
+      {/* About Section */}
+      <section id="about" className="py-20 bg-white">
+        <div ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Photo */}
+            <div className={`relative transition-all duration-700 ${aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+              <div className="w-full h-[400px] md:h-[520px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-[#D4A574]/30">
+                <img src={getImagePath('/about-bhuvita.jpeg')} alt="Bhuvita - UV Ghai certified bridal makeup artist in Chandigarh, draping a bride" className="w-full h-full object-cover object-top" />
+              </div>
+              <div className="absolute -bottom-5 -right-4 sm:-right-6 bg-white px-5 py-4 rounded-xl shadow-lg">
+                <p className="text-2xl font-bold text-[#8B6F47]">5,000+</p>
+                <p className="text-sm text-gray-600">Instagram Community</p>
+              </div>
+            </div>
+
+            {/* Text */}
+            <div className={`transition-all duration-700 delay-200 ${aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
+              <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">Meet Your Artist</p>
+              <h2 className="text-4xl font-bold mb-6 text-gradient-gold">Meet Bhuvita</h2>
+              <p className="text-lg text-gray-600 leading-relaxed mb-4">
+                A <span className="font-semibold text-[#8B6F47]">UV Ghai&ndash;certified</span> makeup artist based in Chandigarh, Bhuvita specialises in <span className="font-semibold text-[#8B6F47]">subtle, skin-like makeup</span> that enhances your natural features rather than masking them.
+              </p>
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                Working from her studio in <span className="font-semibold">Sector 37A, Chandigarh</span> and available on-venue across Chandigarh, Mohali &amp; Panchkula, she creates soft, elegant looks for brides who want to look effortlessly like the best version of themselves &mdash; on their wedding day and every celebration around it.
+              </p>
+              <div className="flex flex-wrap gap-3 mb-8">
+                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#8B6F47] px-4 py-2 rounded-full text-sm"><Star className="h-4 w-4 text-[#D4A574]" /> UV Ghai Certified</span>
+                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#8B6F47] px-4 py-2 rounded-full text-sm"><Sparkles className="h-4 w-4 text-[#D4A574]" /> Subtle Makeup Specialist</span>
+                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#8B6F47] px-4 py-2 rounded-full text-sm"><Palette className="h-4 w-4 text-[#D4A574]" /> Studio &amp; On-Venue</span>
+              </div>
+              <a
+                href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'd%20love%20to%20know%20more%20about%20your%20makeup%20services"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-[#8B6F47] text-white px-8 py-3 rounded-full hover:bg-[#6B5637] transition transform hover:scale-105 hover-glow active-press"
+              >
+                Book a Consultation
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Portfolio Section */}
-      <section id="portfolio" className="py-20 bg-white">
+      <section id="portfolio" className="py-20 bg-[#FAF7F5]">
         <div ref={portfolioRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center mb-12 transition-all duration-700 ${portfolioInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">01 / Portfolio</p>
@@ -827,28 +877,48 @@ const MakeoversByBhuvita = () => {
             <p className="text-lg text-gray-600">Book your bridal makeup consultation in Chandigarh, Mohali &amp; Panchkula</p>
           </div>
 
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl p-8">
 
-              <div className="flex flex-col md:flex-row justify-around text-center md:text-left gap-6">
-                  <a 
-                    href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20bridal%20makeup%20services" 
-                    target="_blank" 
+              <div className="grid sm:grid-cols-3 gap-6 text-center sm:text-left mb-8">
+                  <a
+                    href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20bridal%20makeup%20services"
+                    target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center md:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
+                    className="flex items-center justify-center sm:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
                   >
-                    <MessageCircle className="h-5 w-5 text-[#8B6F47]" />
+                    <MessageCircle className="h-5 w-5 text-[#8B6F47] flex-shrink-0" />
                     <span>+91 78888 08231</span>
                   </a>
-                  <a 
-                    href="https://www.instagram.com/makeoversbybhuvita" 
-                    target="_blank" 
+                  <a
+                    href="https://www.instagram.com/makeoversbybhuvita"
+                    target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center md:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
+                    className="flex items-center justify-center sm:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
                   >
-                    <Instagram className="h-5 w-5 text-[#8B6F47]" />
+                    <Instagram className="h-5 w-5 text-[#8B6F47] flex-shrink-0" />
                     <span>@makeoversbybhuvita</span>
                   </a>
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Makeovers+by+Bhuvita+Sector+37A+Chandigarh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center sm:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
+                  >
+                    <MapPin className="h-5 w-5 text-[#8B6F47] flex-shrink-0" />
+                    <span>Studio: Sector 37A, Chandigarh</span>
+                  </a>
+              </div>
+
+              {/* Google Map */}
+              <div className="rounded-xl overflow-hidden h-64 w-full">
+                <iframe
+                  title="Makeovers by Bhuvita - Sector 37A, Chandigarh"
+                  src="https://maps.google.com/maps?q=Sector%2037A%2C%20Chandigarh&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
             </div>
           </div>

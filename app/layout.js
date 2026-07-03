@@ -62,14 +62,16 @@ export default function RootLayout({ children }) {
     '@context': 'https://schema.org',
     '@type': 'BeautySalon',
     name: 'Makeovers by Bhuvita',
-    description: 'Professional bridal, party & engagement makeup artist in Chandigarh, Mohali, Panchkula & Tricity. Specializing in HD/Airbrush bridal makeup, pre-wedding functions, and destination weddings.',
+    description: 'UV Ghai-certified bridal, party & engagement makeup artist in Chandigarh, Mohali, Panchkula & Tricity. Specialising in subtle, skin-like bridal makeup, pre-wedding functions, and destination weddings.',
     url: siteUrl,
     image: `${siteUrl}/hero-image.jpeg`,
     telephone: '+91-78888-08231',
     address: {
       '@type': 'PostalAddress',
+      streetAddress: 'Sector 37A',
       addressLocality: 'Chandigarh',
       addressRegion: 'Chandigarh',
+      postalCode: '160036',
       addressCountry: 'IN',
     },
     geo: {
@@ -85,12 +87,9 @@ export default function RootLayout({ children }) {
       { '@type': 'City', name: 'Kharar' },
     ],
     priceRange: '₹8,000 - ₹80,000',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      reviewCount: '200',
-      bestRating: '5',
-    },
+    // NOTE: aggregateRating intentionally omitted until real, on-page reviews exist.
+    // Google can penalize review markup not backed by visible reviews. Re-add once
+    // real Google/client reviews are collected and displayed on the page.
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Makeup Services',
