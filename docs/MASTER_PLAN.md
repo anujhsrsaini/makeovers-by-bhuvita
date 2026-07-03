@@ -99,7 +99,65 @@ File-ownership rule: no two implementation agents may touch the same file. Cross
 
 ## 6. Prioritized backlog
 
-_(filled in after Phase A audit — see AUDIT FINDINGS below)_
+Audit complete (2026-07-03): **74 findings — 17 P0, 32 P1, 25 P2.** Full detail in `docs/AUDIT_FINDINGS.md`. Scope for this launch: **all P0s + all P1s + cheap P2s.**
+
+### P0 (launch blockers)
+1. **Honesty sweep** — remove fake testimonials, unverified stats (50+ destination weddings, 4.9★), fabricated Goa/Udaipur/Jaipur/Dubai experience claims (page + FAQ JSON-LD), invented cancellation/refund policy, "International Booking" card, "team" claims. Replace with verified facts: 200+ brides, 5+ yrs, 5,000+ IG community, 750+ looks posted, UV Ghai cert.
+2. **Image pipeline** — 32MB → ~3MB via sharp (contract §6.1); dedicated 1200×630 `og-image.jpg` (current OG image is a 1.4MB portrait falsely declared 1200×630 — breaks WhatsApp previews, our #1 share channel).
+3. **Kill the `opacity-0` page gate** — content must be visible in initial HTML without JS.
+4. **H1 fix** — nav logo `<h1>` → `<div>`; hero heading becomes the sole H1 with "Bridal Makeup Artist in Chandigarh" keywords.
+5. **Hidden desktop gallery downloads ~3MB on mobile** — single responsive gallery, no duplicate hidden-DOM image downloads; portfolio is below fold → lazy.
+6. **A11y blockers** — aria-labels on ~15 icon-only controls; lightbox becomes a real modal (role=dialog, focus trap, scroll lock, keyboard-openable); contrast fixes (#D4A574 labels, white-on-#25D366, footer white/40-50).
+
+### P1 (high impact)
+- Canonical/og:url trailing slash + `metadataBase`; title ≤60 chars leading with "Bridal Makeup Artist in Chandigarh"; description leads with *subtle, skin-like* positioning (not HD/Airbrush); drop "Best" superlative + keywords meta.
+- `sitemap.xml` with image entries for all 39 portfolio images (NO robots.txt — ignored on project pages; meta robots already correct).
+- JSON-LD: `@id`, `hasMap`, Sector 37A geo, offer catalog matched to visible cards, Dubai/city claims removed from FAQ schema.
+- Hero LCP: preload + `fetchpriority="high"` + explicit dimensions; responsive webp variants.
+- IG teaser → 400px thumbs; Maps iframe → click-to-load facade; Dancing Script via next/font (kill CSS @import chain).
+- `scrollProgress` re-render fix (rAF + refs or isolated child component).
+- WhatsApp prefills qualify the lead (function/date/venue placeholders); CTA copy says "Chat on WhatsApp"; response-time expectation set.
+- Services terminology fix ("On Studio(Chandigarh) Services" ↔ onVenue confusion); brand list consistent (badge vs FAQ).
+- Deploy workflow: `npm ci`, proper caching, drop cache-clean hacks.
+- basePath single-sourced via `NEXT_PUBLIC_BASE_PATH` in next.config.mjs.
+- Missing bride-critical content: hygiene, trial price/how-to-book, what "subtle, skin-like" means, Tricity travel.
+- FAQ aria-expanded/aria-controls; prefers-reduced-motion; carousel aria-live + pause; ≥44px touch targets; descriptive alt text everywhere.
+
+### P2 (included where cheap)
+- Custom branded 404; dead `export` script removal; footer year 2026; skip link; visible focus styles; desktop-gallery duplicate-image clamp bug; testimonial auto-rotate touch bug; lightbox effect deps; stats dead code.
+- Deferred (post-launch): keyworded image filenames, IG-comment-sourced real reviews, custom domain.
+
+### 6.0 Cross-agent contracts (beyond §6.1 images)
+- **og-image:** Agent A produces `public/og-image.jpg` (1200×630, <300KB, landscape attention-crop of hero). Agent C references `${siteUrl}og-image.jpg`.
+- **Script font:** Agent C loads `Dancing_Script` via `next/font` exposing CSS var `--font-script` on `<body>`; Agent B's `.font-script` in globals.css uses `var(--font-script)` and the Google Fonts `@import` is deleted.
+- **basePath:** Agent C sets `env: { NEXT_PUBLIC_BASE_PATH: isProd ? '/makeovers-by-bhuvita' : '' }` in `next.config.mjs`; Agent B's `getImagePath` uses `process.env.NEXT_PUBLIC_BASE_PATH || ''`.
+- **Hero preload:** Agent C adds `<link rel="preload" as="image">` with `imageSrcSet` for `hero-828/1200/1600.webp` in layout head; Agent B renders hero `<img>` with matching srcSet + `fetchPriority="high"`.
+- **Stats:** verified set = `200+ Happy Brides · 5+ Years Experience · 5,000+ Instagram Community · 750+ Bridal Looks Shared` (counter targets: 200, 5, 5000, 750).
+
+### 6.1 Image pipeline interface contract (FIXED — all agents code against this)
+
+Inventory: 39 portfolio JPEGs (most 1200px wide but 600KB–1.5MB each, 5 are 2268–3030px wide), hero 3030×4032 @1.3MB, about 852×1400 @456KB. Total public/: ~34MB.
+
+`scripts/optimize-images.mjs` (run locally with `node scripts/optimize-images.mjs`; sharp as devDependency; outputs are committed — CI never needs sharp):
+
+| Source | Outputs |
+|---|---|
+| `public/portfolio/{id}.jpeg` | `{id}-800.webp` (800w, q75) · `{id}-1200.webp` (1200w, q75) · `{id}-thumb.webp` (400w, q70) · `{id}.jpeg` recompressed in place (max 1200w, mozjpeg q72) |
+| `public/hero-image.jpeg` | `hero-828.webp` / `hero-1200.webp` / `hero-1600.webp` (q75) · `hero-image.jpeg` recompressed (max 1200w) |
+| `public/about-bhuvita.jpeg` | `about-800.webp` (q75) · `about-bhuvita.jpeg` recompressed (max 800w) |
+
+- Never upscale (skip variants wider than source).
+- `portfolio.json`: image agent adds `width` + `height` fields (post-resize intrinsic dimensions of the 800w variant × its height) per entry. page.js reads them for CLS-free rendering.
+- page.js renders portfolio images via `<picture><source type="image/webp" srcSet="{id}-800.webp 800w, {id}-1200.webp 1200w" sizes=...><img src="{id}.jpeg" width height loading decoding/></picture>`.
+- Expected total weight after: ~3–4MB (≈90% reduction); initial mobile payload ≈300–500KB.
+
+### 6.2 Implementation file ownership (no overlaps)
+
+| Agent | Owns |
+|---|---|
+| A — images | `scripts/optimize-images.mjs`, all files in `public/` (image binaries + portfolio.json), `package.json`/`package-lock.json` (add sharp devDep, drop dead `export` script) |
+| B — page | `app/page.js`, `app/globals.css` |
+| C — seo-infra | `app/layout.js`, `app/sitemap.js` (new), `public/robots.txt` (new, exempt from A's public/ ownership), `app/not-found.js` (new), `.github/workflows/nextjs.yml` |
 
 ## 7. Offline tasks for the owner (cannot be automated)
 
