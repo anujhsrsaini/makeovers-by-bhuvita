@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Add custom font for script/elegant text */
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
-
+/* Script/elegant font — self-hosted via next/font in layout.js (--font-script) */
 @layer utilities {
   .font-script {
-    font-family: 'Dancing Script', cursive;
+    font-family: var(--font-script), cursive;
   }
 }
 
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Visible branded focus styles */
+:focus-visible {
+  outline: 3px solid #8B6F47;
+  outline-offset: 2px;
 }
 
 /* Carousel fade animation */
@@ -30,28 +30,12 @@ html {
 
 /* Slow pulse for WhatsApp floating button */
 @keyframes pulseSlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(18, 140, 75, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(18, 140, 75, 0); }
 }
 
 .animate-pulse-slow {
   animation: pulseSlow 2s ease-in-out infinite;
-}
-
-/* Scroll-triggered slide up animation */
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-slide-up {
-  animation: slideUp 0.6s ease-out forwards;
 }
 
 /* Floating animation for hero badge */
@@ -86,9 +70,9 @@ html {
   animation: countBounce 0.4s ease-out;
 }
 
-/* Gradient text utility */
+/* Gradient text utility — midpoint kept dark enough for large-text contrast */
 .text-gradient-gold {
-  background: linear-gradient(135deg, #8B6F47 0%, #D4A574 50%, #8B6F47 100%);
+  background: linear-gradient(135deg, #8B6F47 0%, #A98B5F 50%, #8B6F47 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -109,12 +93,16 @@ html {
   transform: scale(0.95);
 }
 
-/* Stagger animation delays for children */
-.stagger-1 { animation-delay: 0ms; }
-.stagger-2 { animation-delay: 100ms; }
-.stagger-3 { animation-delay: 200ms; }
-.stagger-4 { animation-delay: 300ms; }
-.stagger-5 { animation-delay: 400ms; }
-.stagger-6 { animation-delay: 500ms; }
-.stagger-7 { animation-delay: 600ms; }
-.stagger-8 { animation-delay: 700ms; }
+/* Respect reduced-motion preferences: kill decorative animation/transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

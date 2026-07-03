@@ -163,8 +163,15 @@ Inventory: 39 portfolio JPEGs (most 1200px wide but 600KB–1.5MB each, 5 are 22
 
 1. Collect 5–10 real client reviews (Google Business Profile ideally) — unlocks honest testimonials + aggregateRating schema.
 2. Create/claim **Google Business Profile** for "Makeovers by Bhuvita, Sector 37A" — single biggest local-SEO lever.
-3. Confirm pricing figures on the site are current.
-4. Consider a custom domain (e.g. makeoversbybhuvita.com) — better branding + SEO than github.io subpath.
+3. **Verify the site in Google Search Console** (URL-prefix property `https://anujhsrsaini.github.io/makeovers-by-bhuvita/`) and **submit `sitemap.xml`** — a project-page site can't have robots.txt, so GSC submission is how crawlers find the image sitemap.
+4. Confirm pricing figures on the site are current.
+5. Consider a custom domain (e.g. makeoversbybhuvita.com) — better branding + SEO than github.io subpath.
+
+## 9. Launch record (2026-07-04)
+
+- Implementation done by 3 parallel agents (images / page / seo-infra) per §5; all §6 P0+P1 items shipped.
+- End-to-end verified in headless Chromium (mobile + desktop + no-JS): single H1, honest content only, 739KB initial mobile image payload (was ~10MB+), working modal lightbox/FAQ/filters/WhatsApp links, zero console errors.
+- High-effort adversarial code review: 10 confirmed findings, all fixed — lightbox focus-trap boundary escape, IG teaser webp-only fallback, FAQ JSON-LD drift (now single-sourced from `app/faq-data.js`), hero preload sizes mismatch + 404 leak (preload moved into page.js), map facade dead without JS (anchor fallback), FAQ answer clipping, exact-price schema for "onwards" prices (→ `priceSpecification.minPrice`), sitemap undiscoverable (added `<link rel="sitemap">` + GSC task), optimize-images stale-backup data-loss bug (→ sha256 manifest in `.image-originals/manifest.json`; pristine backups restored from git and all variants regenerated single-pass from originals: 34.1MB → 11.5MB JPEG + webp variants).
 
 ## 8. Audit findings
 

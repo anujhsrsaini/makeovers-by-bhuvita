@@ -1,10 +1,118 @@
 "use client"
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Menu, X, Instagram, MessageCircle, Phone, Mail, Star, ChevronLeft, ChevronRight, ChevronDown, Calendar, Palette, Heart, Shield, Clock, Sparkles, ArrowUp, MapPin } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, X, Instagram, MessageCircle, Phone, Star, ChevronLeft, ChevronRight, ChevronDown, Calendar, Palette, Heart, Clock, Sparkles, ArrowUp, MapPin } from 'lucide-react';
 import portfolioData from '../public/portfolio/portfolio.json';
+import { faqs } from './faq-data';
+
+// ---------------------------------------------------------------------------
+// Module-scope constants & helpers (created once, not per render)
+// ---------------------------------------------------------------------------
+
+// Helper function for image paths — basePath single-sourced from next.config.mjs
+const getImagePath = (path) => (process.env.NEXT_PUBLIC_BASE_PATH || '') + path;
+
+const WHATSAPP_NUMBER = '917888808231';
+const waLink = (text) => `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+const WA_GENERAL = waLink("Hi Bhuvita! I'm looking for bridal makeup on [date] at [venue/city]. Could you share availability and details?");
+const INSTAGRAM_URL = 'https://www.instagram.com/makeoversbybhuvita';
+const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Makeovers+by+Bhuvita+Sector+37A+Chandigarh';
+
+const portfolioCategories = ['All', 'Bridal Look', 'Engagement/Reception', 'HD/Party Makeups', 'Unique Hairdos'];
+
+// webp variants per image-pipeline contract: {id}-800.webp / {id}-1200.webp / {id}-thumb.webp
+const fileBase = (file) => file.replace(/\.[^.]+$/, '');
+const portfolioImages = portfolioData.map((img) => ({
+  ...img,
+  url: getImagePath(`/portfolio/${img.file}`),
+  srcSet: `${getImagePath(`/portfolio/${fileBase(img.file)}-800.webp`)} 800w, ${getImagePath(`/portfolio/${fileBase(img.file)}-1200.webp`)} 1200w`,
+  alt: `${img.description} — bridal makeup by Makeovers by Bhuvita, Chandigarh`,
+}));
+
+const portfolioById = Object.fromEntries(portfolioData.map((p) => [p.id, p]));
+const IG_TEASER_IDS = [5, 11, 17, 24, 30, 36];
+
+const services = {
+  tricity: [
+    {
+      title: "Bridal Makeup",
+      price: "₹25,000 onwards",
+      features: ["Subtle, Skin-Like Base (HD/Airbrush available)", "Hair Styling", "Draping", "Touch-up Kit"],
+      whatsapptext: "Hi Bhuvita! I'd like to book Bridal Makeup (₹25,000 onwards). My date: [date], venue: [venue/city]."
+    },
+    {
+      title: "Pre-Wedding Functions",
+      price: "₹15,000 per function",
+      features: ["Mehendi/Sangeet/Haldi", "Makeup & Hair", "Outfit Draping"],
+      whatsapptext: "Hi Bhuvita! I'd like makeup for my pre-wedding functions (₹15,000 per function). My dates: [dates], venue: [venue/city]."
+    },
+    {
+      title: "Party Makeup",
+      price: "₹8,000 onwards",
+      features: ["Cocktail/Reception", "Professional Makeup", "Hairstyling"],
+      whatsapptext: "Hi Bhuvita! I'd like to book Party Makeup (₹8,000 onwards). My date: [date], venue: [venue/city]."
+    },
+    {
+      title: "Bridal Package",
+      price: "₹60,000",
+      features: ["Complete Wedding", "All Functions Covered", "Family Makeup Available", "Premium Products"],
+      whatsapptext: "Hi Bhuvita! I'd like the complete Bridal Package (₹60,000). My wedding date: [date], venue: [venue/city]."
+    }
+  ],
+  outstation: [
+    {
+      title: "Destination Wedding",
+      price: "₹80,000 onwards",
+      features: ["Travel & Stay Extra", "Multiple Day Coverage", "Complete Bridal Services"],
+      whatsapptext: "Hi Bhuvita! I'm planning a destination wedding on [date] at [venue/city]. Could you share availability and details (₹80,000 onwards)?"
+    },
+    {
+      title: "Outstation Bridal",
+      price: "₹35,000 onwards",
+      features: ["Single Day Service", "Travel Charges Apply", "Full Bridal Look", "Touch-up Kit Included"],
+      whatsapptext: "Hi Bhuvita! I'd like outstation bridal makeup (₹35,000 onwards). My date: [date], city/venue: [venue/city]."
+    },
+    {
+      title: "Multi-City Package",
+      price: "Custom Quote",
+      features: ["Multiple Venues", "Flexible Schedule", "Premium Service"],
+      whatsapptext: "Hi Bhuvita! I need makeup across multiple cities. My dates: [dates], cities: [cities]. Could you share a custom quote?"
+    }
+  ]
+};
+
+// Verified stats only (MASTER_PLAN §2 / §6.0)
+const stats = [
+  { target: 200, suffix: '+', label: 'Happy Brides' },
+  { target: 5, suffix: '+', label: 'Years Experience' },
+  { target: 5000, suffix: '+', label: 'Instagram Community' },
+  { target: 750, suffix: '+', label: 'Bridal Looks Shared' },
+];
+const STAT_TARGETS = stats.map((s) => s.target);
+
+const trustBadges = [
+  { icon: Star, label: "UV Ghai Certified MUA" },
+  { icon: Sparkles, label: "Specialised in Subtle, Skin-Like Makeup" },
+  { icon: Palette, label: "MAC, Bobbi Brown, Charlotte Tilbury, Huda Beauty & NARS Products" },
+  { icon: Heart, label: "Hygiene First" },
+  { icon: Clock, label: "Always On Time" },
+];
+
+const processSteps = [
+  { icon: MessageCircle, title: "Consultation", desc: "Share your date, functions, outfits and inspiration on WhatsApp" },
+  { icon: Palette, title: "Trial Session", desc: "Optional paid trial to finalise your exact look before the big day" },
+  { icon: Calendar, title: "Wedding Day", desc: "Relax while we create your dream bridal look on-site" },
+  { icon: Heart, title: "Your Perfect Look", desc: "Walk down the aisle feeling confident and absolutely stunning" },
+];
+
+// FAQ content lives in app/faq-data.js so the visible FAQ and the FAQPage
+// JSON-LD in layout.js can never drift apart.
+
+// ---------------------------------------------------------------------------
+// Small components
+// ---------------------------------------------------------------------------
 
 // Custom hook for scroll-triggered animations
-function useInView(ref, options = {}) {
+function useInView(ref) {
   const [isInView, setIsInView] = useState(false);
   useEffect(() => {
     if (!ref.current) return;
@@ -13,17 +121,16 @@ function useInView(ref, options = {}) {
         setIsInView(true);
         observer.disconnect();
       }
-    }, { threshold: 0.1, ...options });
+    }, { threshold: 0.1 });
     observer.observe(ref.current);
     return () => observer.disconnect();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ref]);
   return isInView;
 }
 
 // SVG Wave Divider component
-const WaveDivider = ({ from = '#FAF7F5', to = '#ffffff', flip = false }) => (
-  <div className={`w-full overflow-hidden leading-none ${flip ? 'rotate-180' : ''}`} style={{ marginTop: '-1px', marginBottom: '-1px' }}>
+const WaveDivider = ({ to = '#ffffff', flip = false }) => (
+  <div className={`w-full overflow-hidden leading-none ${flip ? 'rotate-180' : ''}`} style={{ marginTop: '-1px', marginBottom: '-1px' }} aria-hidden="true">
     <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-[60px] md:h-[80px]" fill={to}>
       <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6.01,68.85-16.01,106.8-23.03,43.16-7.98,88.26-10.99,134-7.13,41.58,3.51,83.64,12.32,123.8,25.03V0Z" opacity=".25" />
       <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" />
@@ -32,22 +139,75 @@ const WaveDivider = ({ from = '#FAF7F5', to = '#ffffff', flip = false }) => (
   </div>
 );
 
+// Scroll progress bar — rAF + ref, no React re-renders on scroll
+function ScrollProgressBar() {
+  const barRef = useRef(null);
+  useEffect(() => {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+      if (barRef.current) barRef.current.style.width = `${pct}%`;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <div className="fixed top-0 left-0 w-full h-[3px] z-[60] pointer-events-none" aria-hidden="true">
+      <div ref={barRef} className="h-full bg-gradient-to-r from-[#8B6F47] to-[#D4A574]" style={{ width: '0%' }} />
+    </div>
+  );
+}
+
+// Back-to-top button — isolated so scroll state doesn't re-render the page tree
+function BackToTopButton() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 500);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      aria-label="Back to top"
+      className={`hidden md:flex fixed bottom-8 left-8 z-50 w-12 h-12 rounded-full bg-[#8B6F47] text-white items-center justify-center shadow-lg hover:bg-[#6B5637] transition-all duration-300 hover-glow ${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
+    >
+      <ArrowUp className="h-5 w-5" aria-hidden="true" />
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
+
 const MakeoversByBhuvita = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentImage, setCurrentImage] = useState(0);
   const [portfolioCategory, setPortfolioCategory] = useState('All');
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [activeFaq, setActiveFaq] = useState(null);
-  const [isTestimonialHovered, setIsTestimonialHovered] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const [animatedStats, setAnimatedStats] = useState([0, 0, 0, 0]);
+  const [animatedStats, setAnimatedStats] = useState(STAT_TARGETS);
   const [statsAnimDone, setStatsAnimDone] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  const [pageLoaded, setPageLoaded] = useState(false);
-  const touchStartX = useRef(null);
-  const touchStartXTestimonial = useRef(null);
+  const [showMap, setShowMap] = useState(false);
+  // Scroll-reveal only kicks in once JS is running (and motion is OK) — the
+  // static HTML is always fully visible.
+  const [revealReady, setRevealReady] = useState(false);
+
+  const lightboxRef = useRef(null);
+  const lightboxCloseRef = useRef(null);
+  const lastFocusedRef = useRef(null);
+  const lightboxTouchX = useRef(null);
 
   // Section refs for scroll animations
   const statsRef = useRef(null);
@@ -55,7 +215,7 @@ const MakeoversByBhuvita = () => {
   const portfolioRef = useRef(null);
   const processRef = useRef(null);
   const servicesRef = useRef(null);
-  const testimonialsRef = useRef(null);
+  const realBridesRef = useRef(null);
   const faqRef = useRef(null);
   const contactRef = useRef(null);
 
@@ -65,344 +225,241 @@ const MakeoversByBhuvita = () => {
   const portfolioInView = useInView(portfolioRef);
   const processInView = useInView(processRef);
   const servicesInView = useInView(servicesRef);
-  const testimonialsInView = useInView(testimonialsRef);
+  const realBridesInView = useInView(realBridesRef);
   const faqInView = useInView(faqRef);
   const contactInView = useInView(contactRef);
 
-  // Page entrance animation
+  // Enable scroll-reveal animations only with JS + motion allowed
   useEffect(() => {
-    const timer = setTimeout(() => setPageLoaded(true), 100);
-    return () => clearTimeout(timer);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const raf = requestAnimationFrame(() => setRevealReady(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Nav shadow + scroll progress + back-to-top on scroll
+  // Content is visible by default; hide-then-reveal only after revealReady
+  const reveal = (inView) => (revealReady && !inView ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0');
+
+  // Nav shadow on scroll (boolean — only flips at the threshold)
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-      setShowBackToTop(window.scrollY > 500);
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Animated stats counter
+  // Animated stats counter (real values are in the static HTML; the count-up
+  // only runs when the bar scrolls into view and motion is allowed)
   useEffect(() => {
     if (!statsInView || statsAnimDone) return;
-    const targets = [200, 5, 50, 4.9];
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setStatsAnimDone(true);
+      return;
+    }
     const duration = 1500;
     const startTime = performance.now();
+    let raf;
     const animate = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-      setAnimatedStats(targets.map((t, i) => {
-        if (i === 3) return Math.round(eased * t * 10) / 10; // 4.9 with decimal
-        return Math.round(eased * t);
-      }));
-      if (progress < 1) requestAnimationFrame(animate);
+      setAnimatedStats(STAT_TARGETS.map((t) => Math.round(eased * t)));
+      if (progress < 1) raf = requestAnimationFrame(animate);
       else setStatsAnimDone(true);
     };
-    requestAnimationFrame(animate);
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
   }, [statsInView, statsAnimDone]);
-
-    // Helper function for image paths
-    const getImagePath = (path) => {
-      const basePath = process.env.NODE_ENV === 'production' ? '/makeovers-by-bhuvita' : '';
-      return basePath + path;
-    };
-
-  const portfolioCategories = ['All', 'Bridal Look', 'Engagement/Reception', 'HD/Party Makeups', 'Unique Hairdos'];
-
-  const portfolioImages = portfolioData.map(img => ({
-    ...img,
-    url: getImagePath(`/portfolio/${img.file}`),
-  }));
 
   const filteredImages = portfolioCategory === 'All'
     ? portfolioImages
-    : portfolioImages.filter(img => img.category === portfolioCategory);
-
-  // Keyboard navigation for lightbox (must be after portfolioImages definition)
-  useEffect(() => {
-    if (lightboxImage === null) return;
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setLightboxImage(null);
-      if (e.key === 'ArrowLeft' && lightboxImage > 0) setLightboxImage(lightboxImage - 1);
-      if (e.key === 'ArrowRight' && lightboxImage < filteredImages.length - 1) setLightboxImage(lightboxImage + 1);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lightboxImage]);
-
-  // ⚠️ PLACEHOLDER TESTIMONIALS — replace with REAL client reviews (WhatsApp/Instagram
-  // screenshots or Google reviews). Fake reviews hurt credibility and trust. Keep names,
-  // events and quotes truthful. Once real reviews exist, also re-add aggregateRating in layout.js.
-  const testimonials = [
-    {
-      id: 1,
-      name: "Priya Sharma",
-      event: "Wedding - December 2023",
-      text: "Bhuvita made my wedding day absolutely magical! Her attention to detail and understanding of my vision was perfect.",
-      rating: 5
-    },
-    {
-      id: 2,
-      name: "Ananya Patel",
-      event: "Wedding - January 2024",
-      text: "Professional, talented, and so sweet! My makeup lasted all day through tears of joy and dancing. Highly recommend!",
-      rating: 5
-    },
-    {
-      id: 3,
-      name: "Kavya Reddy",
-      event: "Wedding - November 2023",
-      text: "Bhuvita is an artist! She enhanced my natural features and made me feel like the most beautiful bride.",
-      rating: 5
-    },
-    {
-      id: 4,
-      name: "Meera Kapoor",
-      event: "Wedding - February 2024",
-      text: "From the trial to the wedding day, Bhuvita was absolutely wonderful. She listened to all my ideas and created a look even better than I imagined!",
-      rating: 5
-    },
-    {
-      id: 5,
-      name: "Simran Kaur",
-      event: "Wedding - March 2024",
-      text: "I was so nervous about my makeup but Bhuvita put me at ease immediately. My makeup was flawless and lasted through the entire celebration.",
-      rating: 5
-    },
-    {
-      id: 6,
-      name: "Ritu Agarwal",
-      event: "Destination Wedding - January 2024",
-      text: "Bhuvita traveled to Udaipur for my destination wedding and handled everything perfectly. Every function had a different look and all were stunning!",
-      rating: 5
-    }
-  ];
-
-  const services = {
-    onVenue: [
-      {
-        title: "Bridal Makeup",
-        price: "₹25,000 onwards",
-        features: ["HD/Airbrush Makeup", "Hair Styling", "Draping", "Touch-up Kit"],
-        whatsapptext: "Hi Bhuvita, I am interested in on-studio bridal makeup"
-      },
-      {
-        title: "Pre-Wedding Functions",
-        price: "₹15,000 per function",
-        features: ["Mehendi/Sangeet/Haldi", "Makeup & Hair", "Outfit Draping"],
-        whatsapptext: "Hi Bhuvita, I am interested in pre-wedding function makeup"
-      },
-      {
-        title: "Party Makeup",
-        price: "₹8,000 onwards",
-        features: ["Cocktail/Reception", "Professional Makeup", "Hairstyling"],
-        whatsapptext: "Hi Bhuvita, I am interested in party makeup"
-      },
-      {
-        title: "Bridal Package",
-        price: "₹60,000",
-        features: ["Complete Wedding", "All Functions Covered", "Family Makeup Available", "Premium Products"],
-        whatsapptext: "Hi Bhuvita, I am interested in the on-studio bridal package"
-      }
-    ],
-    outstation: [
-      {
-        title: "Destination Wedding",
-        price: "₹80,000 onwards",
-        features: ["Travel & Stay Extra", "Multiple Day Coverage", "Complete Bridal Services", "Team Available"],
-        whatsapptext: "Hi Bhuvita, I am interested in destination wedding makeup services"
-      },
-      {
-        title: "Outstation Bridal",
-        price: "₹35,000 onwards",
-        features: ["Single Day Service", "Travel Charges Apply", "Full Bridal Look", "Touch-up Kit Included"],
-        whatsapptext: "Hi Bhuvita, I am interested in outstation bridal makeup"
-      },
-      {
-        title: "Multi-City Package",
-        price: "Custom Quote",
-        features: ["Multiple Venues", "Flexible Schedule", "Dedicated Team", "Premium Service"],
-        whatsapptext: "Hi Bhuvita, I am interested in the multi-city makeup package"
-      },
-      {
-        title: "International Booking",
-        price: "On Request",
-        features: ["Overseas Weddings", "Visa & Travel Extra", "Extended Stay Options", "Luxury Service"],
-        whatsapptext: "Hi Bhuvita, I am interested in international booking for makeup services"
-      }
-    ]
-  };
-
-  const stats = [
-    { number: "200+", label: "Happy Brides" },
-    { number: "5+", label: "Years Experience" },
-    { number: "50+", label: "Destination Weddings" },
-    { number: "4.9\u2605", label: "Average Rating" },
-  ];
-
-  const trustBadges = [
-    { icon: Star, label: "UV Ghai Certified MUA" },
-    { icon: Sparkles, label: "Specialised in Subtle, Skin-Like Makeup" },
-    { icon: Palette, label: "MAC, Bobbi Brown, Charlotte Tilbury, Huda Beauty & NARS Products" },
-    { icon: Heart, label: "Hygiene First" },
-    { icon: Clock, label: "On-Time Guarantee" },
-  ];
-
-  const processSteps = [
-    { icon: MessageCircle, title: "Consultation", desc: "Discuss your vision, outfit, and preferences over a WhatsApp call" },
-    { icon: Palette, title: "Trial Session", desc: "Test your complete look before the big day to ensure perfection" },
-    { icon: Calendar, title: "Wedding Day", desc: "Relax while we create your dream bridal look on-site" },
-    { icon: Heart, title: "Your Perfect Look", desc: "Walk down the aisle feeling confident and absolutely stunning" },
-  ];
-
-  const faqs = [
-    { q: "How far in advance should I book?", a: "We recommend booking 2-3 months in advance for wedding dates, especially during peak season (October-February). For destination weddings, 4-6 months is ideal." },
-    { q: "Do you offer trial sessions? What\u2019s included?", a: "Yes! A trial session includes a full bridal look with makeup and hair styling. This helps us finalize your perfect look before the wedding day. Trial charges are separate from the wedding day package." },
-    { q: "What products and brands do you use?", a: "We use premium brands including MAC, Bobbi Brown, Charlotte Tilbury, and Huda Beauty. All products are genuine, skin-safe, and suited to Indian skin tones and weather conditions." },
-    { q: "Can you do makeup for my bridesmaids and family?", a: "Absolutely! We offer family and bridesmaid packages. Our team can handle multiple people so everyone looks their best on your special day." },
-    { q: "Do you travel for destination weddings?", a: "Yes, we travel across India and internationally. Travel and accommodation charges apply separately. We have experience with weddings in Goa, Udaipur, Jaipur, Dubai, and more." },
-    { q: "How long does bridal makeup take?", a: "A complete bridal look typically takes 2-2.5 hours including makeup, hair styling, and draping. We recommend starting 3 hours before the ceremony for a relaxed experience." },
-    { q: "What is your cancellation policy?", a: "We understand plans can change. Cancellations made 30+ days before the event receive a full refund minus the booking amount. Please reach out to discuss rescheduling options." },
-    { q: "Do you provide a touch-up kit?", a: "Yes! Every bridal package includes a personalized touch-up kit with blotting papers, lipstick, and setting spray to keep you fresh throughout the celebrations." },
-  ];
-
-  const maxDesktopIndex = Math.max(filteredImages.length - 3, 0);
-
-  const nextImage = () => {
-    setCurrentImage((prev) => Math.min(prev + 1, filteredImages.length - 1));
-  };
-
-  const prevImage = () => {
-    setCurrentImage((prev) => Math.max(prev - 1, 0));
-  };
+    : portfolioImages.filter((img) => img.category === portfolioCategory);
 
   const handleCategoryChange = (category) => {
     setPortfolioCategory(category);
-    setCurrentImage(0);
+    setLightboxImage(null);
   };
 
-  // Touch swipe handlers for portfolio carousel
-  const handlePortfolioTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
-  const handlePortfolioTouchEnd = (e) => {
-    if (touchStartX.current === null) return;
-    const delta = touchStartX.current - e.changedTouches[0].clientX;
-    if (delta > 50) nextImage();
-    else if (delta < -50) prevImage();
-    touchStartX.current = null;
-  };
+  const lightboxOpen = lightboxImage !== null;
 
-  // Touch swipe handlers for testimonial carousel
-  const handleTestimonialTouchStart = (e) => { touchStartXTestimonial.current = e.touches[0].clientX; };
-  const handleTestimonialTouchEnd = (e) => {
-    if (touchStartXTestimonial.current === null) return;
-    const delta = touchStartXTestimonial.current - e.changedTouches[0].clientX;
-    if (delta > 50) setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    else if (delta < -50) setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    touchStartXTestimonial.current = null;
-  };
-
-  // Auto-rotate testimonials
+  // Lightbox modal behaviour: focus trap, scroll lock, keyboard nav, focus restore
   useEffect(() => {
-    if (isTestimonialHovered) return;
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isTestimonialHovered, testimonials.length]);
+    if (!lightboxOpen) return;
+    lastFocusedRef.current = document.activeElement;
+    document.body.style.overflow = 'hidden';
+    lightboxCloseRef.current?.focus();
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setLightboxImage(null);
+      if (e.key === 'ArrowLeft') setLightboxImage((i) => (i !== null && i > 0 ? i - 1 : i));
+      if (e.key === 'ArrowRight') setLightboxImage((i) => (i !== null && i < filteredImages.length - 1 ? i + 1 : i));
+      if (e.key === 'Tab') {
+        const focusables = lightboxRef.current?.querySelectorAll('button:not([disabled])');
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        // Focus can land on <body> when a Prev/Next button unmounts at an
+        // index boundary — pull it back inside the modal instead of letting
+        // Tab escape behind the overlay.
+        if (!lightboxRef.current?.contains(document.activeElement)) {
+          e.preventDefault();
+          first.focus();
+          return;
+        }
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+      lastFocusedRef.current?.focus?.();
+    };
+  }, [lightboxOpen, filteredImages.length]);
+
+  // If the focused Prev/Next button unmounted after navigating to an index
+  // boundary, keep focus inside the modal.
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    if (!lightboxRef.current?.contains(document.activeElement)) {
+      lightboxCloseRef.current?.focus();
+    }
+  }, [lightboxImage, lightboxOpen]);
+
+  // Touch swipe navigation inside the lightbox
+  const handleLightboxTouchStart = (e) => { lightboxTouchX.current = e.touches[0].clientX; };
+  const handleLightboxTouchEnd = (e) => {
+    if (lightboxTouchX.current === null) return;
+    const delta = lightboxTouchX.current - e.changedTouches[0].clientX;
+    if (delta > 50) setLightboxImage((i) => (i !== null && i < filteredImages.length - 1 ? i + 1 : i));
+    else if (delta < -50) setLightboxImage((i) => (i !== null && i > 0 ? i - 1 : i));
+    lightboxTouchX.current = null;
+  };
 
   return (
-    <div className={`min-h-screen bg-[#FAF7F5] transition-opacity duration-700 ${pageLoaded ? 'opacity-100' : 'opacity-0'}`}>
+    <div className="min-h-screen bg-[#FAF7F5]">
+      {/* Skip link for keyboard users */}
+      {/* Hero LCP preload — lives here (not layout) so the 404 page doesn't
+          download a hero it never renders; sizes matches the hero <picture>. */}
+      <link
+        rel="preload"
+        as="image"
+        imageSrcSet={`${getImagePath('/hero-828.webp')} 828w, ${getImagePath('/hero-1200.webp')} 1200w, ${getImagePath('/hero-1600.webp')} 1600w`}
+        imageSizes="(max-width: 767px) 92vw, 45vw"
+        fetchPriority="high"
+      />
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[70] focus:bg-white focus:text-[#8B6F47] focus:px-4 focus:py-2 focus:rounded-full focus:shadow-lg">
+        Skip to content
+      </a>
+
       {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-[3px] z-[60] pointer-events-none">
-        <div className="h-full bg-gradient-to-r from-[#8B6F47] to-[#D4A574] transition-all duration-150" style={{ width: `${scrollProgress}%` }} />
-      </div>
+      <ScrollProgressBar />
 
       {/* Navigation */}
       <nav className={`fixed top-[3px] w-full bg-white/90 backdrop-blur-md z-50 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-none'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-xl sm:text-2xl font-script text-[#8B6F47]">Makeovers by Bhuvita</h1>
+              <div className="text-xl sm:text-2xl font-script text-[#8B6F47]">Makeovers by Bhuvita</div>
             </div>
-            
+
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8">
               <a href="#home" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Home</a>
               <a href="#about" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">About</a>
               <a href="#portfolio" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Portfolio</a>
               <a href="#services" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Services</a>
-              <a href="#testimonials" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Testimonials</a>
+              <a href="#real-brides" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Real Brides</a>
               <a href="#contact" className="text-gray-700 hover:text-[#8B6F47] transition relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-[#8B6F47] after:transition-all hover:after:w-full">Contact</a>
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden"
+            <button
+              className="md:hidden p-2 -m-2"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden bg-white border-t overflow-hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+        <div id="mobile-menu" className={`md:hidden bg-white border-t overflow-hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="px-2 pt-2 pb-3 space-y-1">
             <a href="#home" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Home</a>
             <a href="#about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">About</a>
             <a href="#portfolio" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Portfolio</a>
             <a href="#services" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Services</a>
-            <a href="#testimonials" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Testimonials</a>
+            <a href="#real-brides" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Real Brides</a>
             <a href="#contact" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-[#8B6F47]">Contact</a>
           </div>
         </div>
       </nav>
 
+      <main id="main">
       {/* Hero Section */}
       <section id="home" className="pt-16 min-h-screen flex items-center bg-gradient-to-br from-[#F5E6D3] to-[#FAF7F5] relative overflow-hidden">
         {/* Decorative background blobs */}
-        <div className="absolute top-20 -left-32 w-96 h-96 rounded-full bg-[#D4A574]/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 -right-20 w-80 h-80 rounded-full bg-[#8B6F47]/8 blur-3xl pointer-events-none" />
+        <div className="absolute top-20 -left-32 w-96 h-96 rounded-full bg-[#D4A574]/10 blur-3xl pointer-events-none" aria-hidden="true" />
+        <div className="absolute bottom-10 -right-20 w-80 h-80 rounded-full bg-[#8B6F47]/8 blur-3xl pointer-events-none" aria-hidden="true" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="text-center md:text-left">
-              <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-800 mb-6">
-                Making Your <span className="text-gradient-gold">Dream Day</span> Beautiful
-              </h2>
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-800 mb-6">
+                Bridal Makeup Artist in Chandigarh for Your <span className="text-gradient-gold">Dream Day</span>
+              </h1>
               <p className="text-xl text-gray-600 mb-8">
                 UV Ghai&ndash;certified bridal makeup artist in Chandigarh, Mohali &amp; Panchkula &mdash; specialising in <span className="font-semibold text-[#8B6F47]">subtle, skin-like makeup</span> that enhances your natural beauty for your special day
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <a href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20makeup%20services"
+                <a href={WA_GENERAL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#8B6F47] text-white px-8 py-3 rounded-full hover:bg-[#6B5637] transition transform hover:scale-105 hover-glow active-press">
-                  Book Consultation
+                  className="inline-flex items-center justify-center gap-2 bg-[#8B6F47] text-white px-8 py-3 rounded-full hover:bg-[#6B5637] transition transform hover:scale-105 hover-glow active-press">
+                  <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                  Chat on WhatsApp
                 </a>
                 <a href="#portfolio" className="border-2 border-[#8B6F47] text-[#8B6F47] px-8 py-3 rounded-full hover:bg-[#8B6F47] hover:text-white transition transform hover:scale-105 active-press">
                   View Portfolio
                 </a>
               </div>
+              <p className="text-sm text-gray-500 mt-4">Replies within a few hours on WhatsApp</p>
             </div>
             <div className="relative">
               <div className="w-full h-96 md:h-[600px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-[#D4A574]/30">
-                <img src={getImagePath('/hero-image.jpeg')} alt="Bridal Makeup" className="w-full h-full object-cover object-center" />
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcSet={`${getImagePath('/hero-828.webp')} 828w, ${getImagePath('/hero-1200.webp')} 1200w, ${getImagePath('/hero-1600.webp')} 1600w`}
+                    sizes="(max-width: 767px) 92vw, 45vw"
+                  />
+                  <img
+                    src={getImagePath('/hero-image.jpeg')}
+                    alt="Bride with subtle, skin-like bridal makeup by Makeovers by Bhuvita, Chandigarh"
+                    width={1200}
+                    height={1597}
+                    fetchPriority="high"
+                    loading="eager"
+                    decoding="async"
+                    className="w-full h-full object-cover object-center"
+                  />
+                </picture>
               </div>
               {/* Shimmer border accent */}
-              <div className="absolute -inset-1 rounded-2xl animate-shimmer opacity-30 -z-10" />
+              <div className="absolute -inset-1 rounded-2xl animate-shimmer opacity-30 -z-10" aria-hidden="true" />
               <div className="absolute bottom-4 left-4 sm:-bottom-6 sm:-left-6 bg-white p-3 sm:p-4 rounded-xl shadow-lg animate-float">
                 <div className="flex items-center gap-2">
-                  <Heart className="h-5 w-5 fill-current text-red-500" />
+                  <Heart className="h-5 w-5 fill-current text-red-500" aria-hidden="true" />
                   <span className="font-semibold">200+ Happy Brides</span>
                 </div>
               </div>
@@ -412,19 +469,16 @@ const MakeoversByBhuvita = () => {
       </section>
 
       {/* Wave Divider: Hero → Social Proof */}
-      <WaveDivider from="#FAF7F5" to="#5C4033" />
+      <WaveDivider to="#5C4033" />
 
       {/* Social Proof Bar */}
       <section ref={statsRef} className="bg-[#5C4033] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 text-center transition-all duration-700 ${statsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 text-center transition-all duration-700 ${reveal(statsInView)}`}>
             {stats.map((stat, index) => (
-              <div key={index} className={statsAnimDone ? 'animate-count-bounce' : ''}>
+              <div key={stat.label} className={statsAnimDone ? 'animate-count-bounce' : ''}>
                 <p className="text-3xl sm:text-4xl font-bold text-[#D4A574]">
-                  {statsInView ? (
-                    index === 3 ? `${animatedStats[3]}★` :
-                    `${animatedStats[index]}+`
-                  ) : '0'}
+                  {animatedStats[index].toLocaleString('en-US')}{stat.suffix}
                 </p>
                 <p className="text-white/80 text-sm sm:text-base mt-1">{stat.label}</p>
               </div>
@@ -434,8 +488,8 @@ const MakeoversByBhuvita = () => {
           <div className="mt-8 pt-8 border-t border-white/20">
             <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
               {trustBadges.map((badge, index) => (
-                <div key={index} className="flex items-center gap-2 text-white/70">
-                  <badge.icon className="h-4 w-4 text-[#D4A574]" />
+                <div key={index} className="flex items-center gap-2 text-white/80">
+                  <badge.icon className="h-4 w-4 text-[#D4A574]" aria-hidden="true" />
                   <span className="text-xs sm:text-sm">{badge.label}</span>
                 </div>
               ))}
@@ -449,9 +503,20 @@ const MakeoversByBhuvita = () => {
         <div ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Photo */}
-            <div className={`relative transition-all duration-700 ${aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+            <div className={`relative transition-all duration-700 ${revealReady && !aboutInView ? 'opacity-0 -translate-x-8' : 'opacity-100 translate-x-0'}`}>
               <div className="w-full h-[400px] md:h-[520px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-[#D4A574]/30">
-                <img src={getImagePath('/about-bhuvita.jpeg')} alt="Bhuvita - UV Ghai certified bridal makeup artist in Chandigarh, draping a bride" className="w-full h-full object-cover object-top" />
+                <picture>
+                  <source type="image/webp" srcSet={`${getImagePath('/about-800.webp')} 800w`} sizes="(max-width: 767px) 92vw, 45vw" />
+                  <img
+                    src={getImagePath('/about-bhuvita.jpeg')}
+                    alt="Bhuvita - UV Ghai certified bridal makeup artist in Chandigarh, draping a bride"
+                    width={800}
+                    height={1315}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover object-top"
+                  />
+                </picture>
               </div>
               <div className="absolute -bottom-5 -right-4 sm:-right-6 bg-white px-5 py-4 rounded-xl shadow-lg">
                 <p className="text-2xl font-bold text-[#8B6F47]">5,000+</p>
@@ -460,8 +525,8 @@ const MakeoversByBhuvita = () => {
             </div>
 
             {/* Text */}
-            <div className={`transition-all duration-700 delay-200 ${aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-              <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">Meet Your Artist</p>
+            <div className={`transition-all duration-700 delay-200 ${revealReady && !aboutInView ? 'opacity-0 translate-x-8' : 'opacity-100 translate-x-0'}`}>
+              <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#8B6F47] mb-3">Meet Your Artist</p>
               <h2 className="text-4xl font-bold mb-6 text-gradient-gold">Meet Bhuvita</h2>
               <p className="text-lg text-gray-600 leading-relaxed mb-4">
                 A <span className="font-semibold text-[#8B6F47]">UV Ghai&ndash;certified</span> makeup artist based in Chandigarh, Bhuvita specialises in <span className="font-semibold text-[#8B6F47]">subtle, skin-like makeup</span> that enhances your natural features rather than masking them.
@@ -470,17 +535,18 @@ const MakeoversByBhuvita = () => {
                 Working from her studio in <span className="font-semibold">Sector 37A, Chandigarh</span> and available on-venue across Chandigarh, Mohali &amp; Panchkula, she creates soft, elegant looks for brides who want to look effortlessly like the best version of themselves &mdash; on their wedding day and every celebration around it.
               </p>
               <div className="flex flex-wrap gap-3 mb-8">
-                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#8B6F47] px-4 py-2 rounded-full text-sm"><Star className="h-4 w-4 text-[#D4A574]" /> UV Ghai Certified</span>
-                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#8B6F47] px-4 py-2 rounded-full text-sm"><Sparkles className="h-4 w-4 text-[#D4A574]" /> Subtle Makeup Specialist</span>
-                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#8B6F47] px-4 py-2 rounded-full text-sm"><Palette className="h-4 w-4 text-[#D4A574]" /> Studio &amp; On-Venue</span>
+                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#6B5637] px-4 py-2 rounded-full text-sm"><Star className="h-4 w-4 text-[#8B6F47]" aria-hidden="true" /> UV Ghai Certified</span>
+                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#6B5637] px-4 py-2 rounded-full text-sm"><Sparkles className="h-4 w-4 text-[#8B6F47]" aria-hidden="true" /> Subtle Makeup Specialist</span>
+                <span className="inline-flex items-center gap-2 bg-[#FAF7F5] text-[#6B5637] px-4 py-2 rounded-full text-sm"><Palette className="h-4 w-4 text-[#8B6F47]" aria-hidden="true" /> Studio &amp; On-Venue</span>
               </div>
               <a
-                href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'd%20love%20to%20know%20more%20about%20your%20makeup%20services"
+                href={WA_GENERAL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-[#8B6F47] text-white px-8 py-3 rounded-full hover:bg-[#6B5637] transition transform hover:scale-105 hover-glow active-press"
+                className="inline-flex items-center gap-2 bg-[#8B6F47] text-white px-8 py-3 rounded-full hover:bg-[#6B5637] transition transform hover:scale-105 hover-glow active-press"
               >
-                Book a Consultation
+                <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                Chat on WhatsApp
               </a>
             </div>
           </div>
@@ -490,121 +556,71 @@ const MakeoversByBhuvita = () => {
       {/* Portfolio Section */}
       <section id="portfolio" className="py-20 bg-[#FAF7F5]">
         <div ref={portfolioRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-12 transition-all duration-700 ${portfolioInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">01 / Portfolio</p>
-            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">My Portfolio</h2>
-            <p className="text-lg text-gray-600">Capturing beauty, one bride at a time</p>
+          <div className={`text-center mb-12 transition-all duration-700 ${reveal(portfolioInView)}`}>
+            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#8B6F47] mb-3">01 / Portfolio</p>
+            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Bridal Makeup Portfolio</h2>
+            <p className="text-lg text-gray-600">Real brides across Chandigarh, Mohali &amp; Panchkula &mdash; one look at a time</p>
           </div>
 
           {/* Category Filter Tabs */}
-          <div className={`flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 transition-all duration-700 delay-200 ${portfolioInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 transition-all duration-700 delay-200 ${reveal(portfolioInView)}`}>
             {portfolioCategories.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryChange(category)}
+                aria-pressed={portfolioCategory === category}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                   portfolioCategory === category
                     ? 'bg-[#8B6F47] text-white shadow-md'
-                    : 'bg-[#FAF7F5] text-[#8B6F47] hover:bg-[#D4A574]/20'
+                    : 'bg-white text-[#6B5637] shadow-sm hover:bg-[#D4A574]/20'
                 }`}
               >
                 {category}
-                <span className="ml-1.5 text-xs opacity-70">
-                  ({category === 'All' ? portfolioImages.length : portfolioImages.filter(img => img.category === category).length})
+                <span className="ml-1.5 text-xs opacity-80">
+                  ({category === 'All' ? portfolioImages.length : portfolioImages.filter((img) => img.category === category).length})
                 </span>
               </button>
             ))}
           </div>
 
-          {/* Desktop Gallery - 3 images */}
-          <div className="hidden md:block mb-12">
-            <div className="relative">
-              <div className="grid grid-cols-3 gap-6">
-                {[0, 1, 2].map((offset) => {
-                  const imageIndex = Math.min(currentImage + offset, filteredImages.length - 1);
-                  if (imageIndex < 0 || imageIndex >= filteredImages.length) return null;
-                  return (
-                    <div key={`${portfolioCategory}-${currentImage}-${offset}`} className="relative group animate-fadeIn cursor-pointer" onClick={() => setLightboxImage(imageIndex)}>
-                      <div className="relative h-[500px] overflow-hidden rounded-2xl shadow-xl hover-golden-glow transition-shadow duration-300">
-                        <img
-                          src={filteredImages[imageIndex].url}
-                          alt={filteredImages[imageIndex].description}
-                          loading={imageIndex < 3 ? "eager" : "lazy"}
-                          className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <p className="text-white text-lg font-semibold">{filteredImages[imageIndex].description}</p>
-                          <p className="text-white/80 text-sm">{filteredImages[imageIndex].category}</p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              {currentImage > 0 && (
+          {/* Single responsive gallery grid */}
+          {filteredImages.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+              {filteredImages.map((img, index) => (
                 <button
-                  onClick={prevImage}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-lg p-3 rounded-full hover:bg-[#FAF7F5] transition"
+                  key={img.id}
+                  type="button"
+                  onClick={() => setLightboxImage(index)}
+                  aria-label={`View ${img.description} full size`}
+                  className="relative group block w-full text-left overflow-hidden rounded-2xl shadow-lg hover-golden-glow transition-shadow duration-300 animate-fadeIn cursor-pointer"
                 >
-                  <ChevronLeft className="h-6 w-6" />
+                  <div className="aspect-[3/4] overflow-hidden">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcSet={img.srcSet}
+                        sizes="(max-width: 767px) 45vw, 30vw"
+                      />
+                      <img
+                        src={img.url}
+                        alt={img.alt}
+                        width={img.width || 800}
+                        height={img.height || 1067}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </picture>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 sm:p-6 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <p className="text-white text-sm sm:text-lg font-semibold">{img.description}</p>
+                    <p className="text-white/80 text-xs sm:text-sm">{img.category}</p>
+                  </div>
                 </button>
-              )}
-              {currentImage < maxDesktopIndex && (
-                <button
-                  onClick={nextImage}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-lg p-3 rounded-full hover:bg-[#FAF7F5] transition"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              )}
+              ))}
             </div>
-          </div>
-
-          {/* Mobile Gallery - Single image */}
-          <div className="md:hidden mb-12">
-            {filteredImages.length > 0 ? (
-            <div className="relative" onTouchStart={handlePortfolioTouchStart} onTouchEnd={handlePortfolioTouchEnd}>
-              <div key={`${portfolioCategory}-${currentImage}`} className="relative h-[400px] sm:h-[500px] overflow-hidden rounded-2xl shadow-xl animate-fadeIn cursor-pointer" onClick={() => setLightboxImage(currentImage)}>
-                <img
-                  src={filteredImages[currentImage]?.url}
-                  alt={filteredImages[currentImage]?.description}
-                  loading={currentImage === 0 ? "eager" : "lazy"}
-                  className="w-full h-full object-cover object-center"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                  <p className="text-white text-xl font-semibold">{filteredImages[currentImage]?.description}</p>
-                  <p className="text-white/80">{filteredImages[currentImage]?.category}</p>
-                </div>
-              </div>
-              {currentImage > 0 && (
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white transition"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-              )}
-              {currentImage < filteredImages.length - 1 && (
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white transition"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              )}
-            </div>
-            ) : (
-              <p className="text-center text-gray-500">No images in this category</p>
-            )}
-          </div>
-
-          {/* Image Counter */}
-          {filteredImages.length > 0 && (
-          <div className="flex justify-center items-center gap-2 mt-4">
-            <span className="text-sm text-gray-500">
-              {currentImage + 1} / {filteredImages.length}
-            </span>
-          </div>
+          ) : (
+            <p className="text-center text-gray-500">No images in this category</p>
           )}
         </div>
       </section>
@@ -612,8 +628,8 @@ const MakeoversByBhuvita = () => {
       {/* How It Works - Process Timeline */}
       <section className="py-20 bg-[#FAF7F5]">
         <div ref={processRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-12 transition-all duration-700 ${processInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">02 / Process</p>
+          <div className={`text-center mb-12 transition-all duration-700 ${reveal(processInView)}`}>
+            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#8B6F47] mb-3">02 / Process</p>
             <h2 className="text-4xl font-bold mb-4 text-gradient-gold">How It Works</h2>
             <p className="text-lg text-gray-600">From consultation to your perfect bridal look</p>
           </div>
@@ -621,11 +637,11 @@ const MakeoversByBhuvita = () => {
           {/* Desktop: Horizontal timeline */}
           <div className="hidden md:flex items-start justify-between relative">
             {/* Connecting line */}
-            <div className="absolute top-10 left-[12%] right-[12%] h-[2px] bg-[#D4A574]" />
+            <div className="absolute top-10 left-[12%] right-[12%] h-[2px] bg-[#D4A574]" aria-hidden="true" />
             {processSteps.map((step, index) => (
-              <div key={index} className={`flex flex-col items-center text-center w-1/4 relative z-10 transition-all duration-700 ${processInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: `${index * 150}ms` }}>
+              <div key={index} className={`flex flex-col items-center text-center w-1/4 relative z-10 transition-all duration-700 ${reveal(processInView)}`} style={{ transitionDelay: `${index * 150}ms` }}>
                 <div className="w-20 h-20 rounded-full bg-[#F5E6D3] flex items-center justify-center mb-4 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-300">
-                  <step.icon className="h-8 w-8 text-[#8B6F47]" />
+                  <step.icon className="h-8 w-8 text-[#8B6F47]" aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">{step.title}</h3>
                 <p className="text-sm text-gray-600 max-w-[200px]">{step.desc}</p>
@@ -635,11 +651,11 @@ const MakeoversByBhuvita = () => {
 
           {/* Mobile: Vertical timeline */}
           <div className="md:hidden space-y-8 relative pl-12">
-            <div className="absolute left-5 top-0 bottom-0 w-[2px] bg-[#D4A574]" />
+            <div className="absolute left-5 top-0 bottom-0 w-[2px] bg-[#D4A574]" aria-hidden="true" />
             {processSteps.map((step, index) => (
               <div key={index} className="relative">
                 <div className="absolute -left-12 top-0 w-10 h-10 rounded-full bg-[#F5E6D3] flex items-center justify-center shadow-md z-10">
-                  <step.icon className="h-5 w-5 text-[#8B6F47]" />
+                  <step.icon className="h-5 w-5 text-[#8B6F47]" aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">{step.title}</h3>
                 <p className="text-sm text-gray-600">{step.desc}</p>
@@ -650,60 +666,61 @@ const MakeoversByBhuvita = () => {
       </section>
 
       {/* Wave Divider: Process → Services */}
-      <WaveDivider from="#FAF7F5" to="#F5E6D3" />
+      <WaveDivider to="#F5E6D3" />
 
       {/* Services Section */}
       <section id="services" className="py-20 bg-[#F5E6D3] relative overflow-hidden">
         {/* Decorative blob */}
-        <div className="absolute top-40 -right-40 w-96 h-96 rounded-full bg-[#D4A574]/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-40 -right-40 w-96 h-96 rounded-full bg-[#D4A574]/10 blur-3xl pointer-events-none" aria-hidden="true" />
 
         <div ref={servicesRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className={`text-center mb-12 transition-all duration-700 ${servicesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">03 / Services</p>
-            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Services & Pricing</h2>
+          <div className={`text-center mb-12 transition-all duration-700 ${reveal(servicesInView)}`}>
+            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#8B6F47] mb-3">03 / Services</p>
+            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Bridal &amp; Party Makeup Prices in Chandigarh</h2>
             <p className="text-lg text-gray-600">Tailored bridal, party &amp; engagement makeup packages in Chandigarh Tricity</p>
           </div>
 
           {/* Service Comparison Helper */}
           <div className="text-center mb-8">
             <a
-              href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20can%20you%20help%20me%20choose%20the%20right%20package?"
+              href={waLink('Hi Bhuvita! Can you help me choose the right package? My function(s): [functions], date: [date], venue: [venue/city].')}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-[#8B6F47] hover:text-[#6B5637] transition text-sm"
             >
-              <MessageCircle className="h-4 w-4" />
+              <MessageCircle className="h-4 w-4" aria-hidden="true" />
               Not sure which package? Let us help you choose
             </a>
           </div>
 
-          {/* On Venue Services */}
+          {/* Chandigarh Tricity Services */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-center mb-8 text-[#8B6F47]">On Studio(Chandigarh) Services</h3>
+            <h3 className="text-2xl font-bold text-center mb-3 text-[#8B6F47]">Chandigarh Tricity &mdash; Studio (Sector 37A) &amp; On-Venue</h3>
+            <p className="text-center text-gray-600 mb-8 text-sm">Prices apply at the Sector 37A studio and on venue across Chandigarh, Mohali &amp; Panchkula.</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {services.onVenue.map((service, index) => (
-                <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full relative ${servicesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: `${index * 100 + 200}ms` }}>
+              {services.tricity.map((service, index) => (
+                <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full relative ${reveal(servicesInView)}`} style={{ transitionDelay: `${index * 100 + 200}ms` }}>
                   {index === 0 && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#8B6F47] text-white text-xs font-bold px-3 py-1 rounded-full">Popular</div>}
                   <div className="text-center mb-6">
-                    <Palette className="h-12 w-12 text-[#8B6F47] mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+                    <Palette className="h-12 w-12 text-[#8B6F47] mx-auto mb-4" aria-hidden="true" />
+                    <h4 className="text-xl font-semibold mb-2">{service.title}</h4>
                     <p className="text-2xl font-bold text-[#8B6F47]">{service.price}</p>
                   </div>
                   <ul className="space-y-2 flex-grow flex flex-col justify-end">
                     {service.features.map((feature, idx) => (
                       <li key={idx} className="flex items-center text-gray-600">
-                        <Star className="h-4 w-4 text-[#D4A574] mr-2 flex-shrink-0" />
+                        <Star className="h-4 w-4 text-[#8B6F47] mr-2 flex-shrink-0" aria-hidden="true" />
                         {feature}
                       </li>
                     ))}
                   </ul>
                   <a
-                    href={`https://wa.me/917888808231?text=${encodeURIComponent(service.whatsapptext)}`}
+                    href={waLink(service.whatsapptext)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-center w-full mt-6 bg-[#F5E6D3] text-[#8B6F47] py-2 rounded-full hover:bg-[#8B6F47] hover:text-white transition hover-glow active-press"
+                    className="block text-center w-full mt-6 bg-[#8B6F47] text-white py-2 rounded-full hover:bg-[#6B5637] transition hover-glow active-press"
                   >
-                    Book Now
+                    Chat to Book
                   </a>
                 </div>
               ))}
@@ -712,30 +729,31 @@ const MakeoversByBhuvita = () => {
 
           {/* Outstation Services */}
           <div>
-            <h3 className="text-2xl font-bold text-center mb-8 text-[#8B6F47]">Outstation Services</h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <h3 className="text-2xl font-bold text-center mb-3 text-[#8B6F47]">Outstation Services</h3>
+            <p className="text-center text-gray-600 mb-8 text-sm">Outside the Tricity &mdash; travel &amp; stay charged separately.</p>
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {services.outstation.map((service, index) => (
-                <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[#D4A574] flex flex-col h-full ${servicesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: `${index * 100 + 600}ms` }}>
+                <div key={index} className={`bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[#D4A574] flex flex-col h-full ${reveal(servicesInView)}`} style={{ transitionDelay: `${index * 100 + 600}ms` }}>
                   <div className="text-center mb-6">
-                    <Calendar className="h-12 w-12 text-[#8B6F47] mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+                    <Calendar className="h-12 w-12 text-[#8B6F47] mx-auto mb-4" aria-hidden="true" />
+                    <h4 className="text-xl font-semibold mb-2">{service.title}</h4>
                     <p className="text-2xl font-bold text-[#8B6F47]">{service.price}</p>
                   </div>
                   <ul className="space-y-2 flex-grow flex flex-col justify-end">
                     {service.features.map((feature, idx) => (
                       <li key={idx} className="flex items-center text-gray-600">
-                        <Star className="h-4 w-4 text-[#D4A574] mr-2 flex-shrink-0" />
+                        <Star className="h-4 w-4 text-[#8B6F47] mr-2 flex-shrink-0" aria-hidden="true" />
                         {feature}
                       </li>
                     ))}
                   </ul>
                   <a
-                    href={`https://wa.me/917888808231?text=${encodeURIComponent(service.whatsapptext)}`}
+                    href={waLink(service.whatsapptext)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-center w-full mt-6 bg-[#F5E6D3] text-[#8B6F47] py-2 rounded-full hover:bg-[#8B6F47] hover:text-white transition hover-glow active-press"
+                    className="block text-center w-full mt-6 bg-[#8B6F47] text-white py-2 rounded-full hover:bg-[#6B5637] transition hover-glow active-press"
                   >
-                    Inquire Now
+                    Ask About This
                   </a>
                 </div>
               ))}
@@ -750,79 +768,47 @@ const MakeoversByBhuvita = () => {
         </div>
       </section>
 
-      {/* Wave Divider: Services → Testimonials */}
-      <WaveDivider from="#F5E6D3" to="#ffffff" />
+      {/* Wave Divider: Services → Real Brides */}
+      <WaveDivider to="#ffffff" />
 
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 bg-white relative overflow-hidden">
-        <div ref={testimonialsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-12 transition-all duration-700 ${testimonialsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">04 / Testimonials</p>
-            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Happy Brides</h2>
-            <p className="text-lg text-gray-600">What our clients say about us</p>
+      {/* Real Brides Section (honest social proof — no invented reviews) */}
+      <section id="real-brides" className="py-20 bg-white relative overflow-hidden">
+        <div ref={realBridesRef} className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`text-center mb-12 transition-all duration-700 ${reveal(realBridesInView)}`}>
+            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#8B6F47] mb-3">04 / Real Brides</p>
+            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Real Brides, Real Looks</h2>
+            <p className="text-lg text-gray-600">Every look on this page is a real bride &mdash; no stock photos, no staged shoots</p>
           </div>
 
-          {/* Testimonial Carousel */}
-          <div
-            className="relative max-w-4xl mx-auto"
-            onMouseEnter={() => setIsTestimonialHovered(true)}
-            onMouseLeave={() => setIsTestimonialHovered(false)}
-            onTouchStart={(e) => { setIsTestimonialHovered(true); handleTestimonialTouchStart(e); }}
-            onTouchEnd={(e) => { handleTestimonialTouchEnd(e); }}
-          >
-            <div className="relative overflow-hidden">
-              <div className="flex transition-transform duration-300 ease-in-out" style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}>
-                {testimonials.map((testimonial) => (
-                  <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
-                    <div className="bg-[#FAF7F5] rounded-2xl p-8 shadow-xl mx-auto max-w-2xl relative">
-                      {/* Decorative quote mark */}
-                      <div className="absolute top-4 left-6 text-[80px] leading-none text-[#D4A574]/20 font-serif pointer-events-none select-none">&ldquo;</div>
-                      <div className="flex justify-center mb-6">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="h-7 w-7 text-yellow-500 fill-current" />
-                        ))}
-                      </div>
-                      <p className="text-gray-700 text-lg mb-6 italic text-center relative z-10">&ldquo;{testimonial.text}&rdquo;</p>
-                      <div className="flex flex-col items-center">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8B6F47] to-[#D4A574] flex items-center justify-center mb-3 shadow-md">
-                          <span className="text-white font-bold text-lg">{testimonial.name.split(' ').map(n => n[0]).join('')}</span>
-                        </div>
-                        <p className="font-semibold text-lg">{testimonial.name}</p>
-                        <p className="text-sm text-gray-600">{testimonial.event}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          <div className={`bg-[#FAF7F5] rounded-2xl p-8 sm:p-10 shadow-xl text-center transition-all duration-700 delay-200 ${reveal(realBridesInView)}`}>
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#8B6F47] to-[#D4A574] flex items-center justify-center mx-auto mb-6 shadow-md">
+              <Instagram className="h-8 w-8 text-white" aria-hidden="true" />
             </div>
-            
-            {/* Navigation Buttons */}
-            <button 
-              onClick={() => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-lg p-3 rounded-full hover:bg-[#FAF7F5] transition"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
-            <button 
-              onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-lg p-3 rounded-full hover:bg-[#FAF7F5] transition"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-
-            {/* Dot Indicators */}
-            <div className="flex justify-center gap-2 mt-8">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    currentTestimonial === index 
-                      ? 'bg-[#8B6F47] w-8' 
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                />
-              ))}
+            <p className="text-gray-700 text-lg leading-relaxed mb-4">
+              Bhuvita shares her work with a community of <span className="font-semibold text-[#8B6F47]">5,000+ followers</span> on Instagram &mdash; <span className="font-semibold text-[#8B6F47]">750+ bridal looks</span> and counting.
+            </p>
+            <p className="text-gray-600 mb-8">
+              See real client feedback in the comments, tagged photos and stories on Instagram &mdash; straight from the brides themselves.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-[#8B6F47] text-white px-8 py-3 rounded-full hover:bg-[#6B5637] transition transform hover:scale-105 hover-glow active-press"
+              >
+                <Instagram className="h-5 w-5" aria-hidden="true" />
+                See Real Bride Feedback on Instagram
+              </a>
+              <a
+                href={WA_GENERAL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 border-2 border-[#8B6F47] text-[#8B6F47] px-8 py-3 rounded-full hover:bg-[#8B6F47] hover:text-white transition transform hover:scale-105 active-press"
+              >
+                <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                Chat on WhatsApp
+              </a>
             </div>
           </div>
         </div>
@@ -831,23 +817,31 @@ const MakeoversByBhuvita = () => {
       {/* FAQ Section */}
       <section className="py-20 bg-[#FAF7F5]">
         <div ref={faqRef} className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-12 transition-all duration-700 ${faqInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">05 / FAQ</p>
+          <div className={`text-center mb-12 transition-all duration-700 ${reveal(faqInView)}`}>
+            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#8B6F47] mb-3">05 / FAQ</p>
             <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Frequently Asked Questions</h2>
             <p className="text-lg text-gray-600">Everything you need to know before booking</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, index) => (
-              <div key={index} className={`bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-500 ${faqInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: `${index * 80 + 200}ms` }}>
-                <button
-                  onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                  className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition"
+              <div key={index} className={`bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-500 ${revealReady && !faqInView ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`} style={{ transitionDelay: `${index * 80 + 200}ms` }}>
+                <h3>
+                  <button
+                    onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                    aria-expanded={activeFaq === index}
+                    aria-controls={`faq-answer-${index}`}
+                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition"
+                  >
+                    <span className="font-medium text-gray-800 pr-4">{faq.q}</span>
+                    <ChevronDown className={`h-5 w-5 text-[#8B6F47] flex-shrink-0 transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`} aria-hidden="true" />
+                  </button>
+                </h3>
+                <div
+                  id={`faq-answer-${index}`}
+                  inert={activeFaq !== index}
+                  className={`overflow-hidden transition-all duration-300 ${activeFaq === index ? 'max-h-[40rem] opacity-100' : 'max-h-0 opacity-0'}`}
                 >
-                  <span className="font-medium text-gray-800 pr-4">{faq.q}</span>
-                  <ChevronDown className={`h-5 w-5 text-[#8B6F47] flex-shrink-0 transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`} />
-                </button>
-                <div className={`overflow-hidden transition-all duration-300 ${activeFaq === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <p className="px-6 pb-4 text-gray-600 text-sm leading-relaxed">{faq.a}</p>
                 </div>
               </div>
@@ -856,12 +850,12 @@ const MakeoversByBhuvita = () => {
 
           <div className="text-center mt-8">
             <a
-              href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I%20have%20a%20question%20about%20your%20services"
+              href={waLink('Hi Bhuvita! I have a question about your services.')}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-[#8B6F47] hover:text-[#6B5637] transition"
             >
-              <MessageCircle className="h-4 w-4" />
+              <MessageCircle className="h-4 w-4" aria-hidden="true" />
               Have more questions? Chat with us
             </a>
           </div>
@@ -871,55 +865,88 @@ const MakeoversByBhuvita = () => {
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-gradient-to-br from-[#F5E6D3] to-[#FAF7F5]">
         <div ref={contactRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-12 transition-all duration-700 ${contactInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#D4A574] mb-3">06 / Contact</p>
-            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Get In Touch</h2>
-            <p className="text-lg text-gray-600">Book your bridal makeup consultation in Chandigarh, Mohali &amp; Panchkula</p>
+          <div className={`text-center mb-12 transition-all duration-700 ${reveal(contactInView)}`}>
+            <p className="text-sm font-medium tracking-[0.3em] uppercase text-[#8B6F47] mb-3">06 / Contact</p>
+            <h2 className="text-4xl font-bold mb-4 text-gradient-gold">Book Your Bridal Makeup Consultation</h2>
+            <p className="text-lg text-gray-600">Bridal makeup in Chandigarh, Mohali &amp; Panchkula &mdash; studio or on venue</p>
           </div>
 
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl p-8">
 
-              <div className="grid sm:grid-cols-3 gap-6 text-center sm:text-left mb-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center sm:text-left mb-4">
                   <a
-                    href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20bridal%20makeup%20services"
+                    href={WA_GENERAL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center sm:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
                   >
-                    <MessageCircle className="h-5 w-5 text-[#8B6F47] flex-shrink-0" />
-                    <span>+91 78888 08231</span>
+                    <MessageCircle className="h-5 w-5 text-[#8B6F47] flex-shrink-0" aria-hidden="true" />
+                    <span>WhatsApp: +91 78888 08231</span>
                   </a>
                   <a
-                    href="https://www.instagram.com/makeoversbybhuvita"
+                    href="tel:+917888808231"
+                    className="flex items-center justify-center sm:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
+                  >
+                    <Phone className="h-5 w-5 text-[#8B6F47] flex-shrink-0" aria-hidden="true" />
+                    <span>Call: +91 78888 08231</span>
+                  </a>
+                  <a
+                    href={INSTAGRAM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center sm:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
                   >
-                    <Instagram className="h-5 w-5 text-[#8B6F47] flex-shrink-0" />
+                    <Instagram className="h-5 w-5 text-[#8B6F47] flex-shrink-0" aria-hidden="true" />
                     <span>@makeoversbybhuvita</span>
                   </a>
                   <a
-                    href="https://www.google.com/maps/search/?api=1&query=Makeovers+by+Bhuvita+Sector+37A+Chandigarh"
+                    href={MAPS_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center sm:justify-start gap-3 text-gray-700 hover:text-[#8B6F47] transition"
                   >
-                    <MapPin className="h-5 w-5 text-[#8B6F47] flex-shrink-0" />
+                    <MapPin className="h-5 w-5 text-[#8B6F47] flex-shrink-0" aria-hidden="true" />
                     <span>Studio: Sector 37A, Chandigarh</span>
                   </a>
               </div>
 
-              {/* Google Map */}
-              <div className="rounded-xl overflow-hidden h-64 w-full">
-                <iframe
-                  title="Makeovers by Bhuvita - Sector 37A, Chandigarh"
-                  src="https://maps.google.com/maps?q=Sector%2037A%2C%20Chandigarh&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
+              <p className="text-sm text-gray-500 text-center mb-8">WhatsApp is fastest &mdash; replies within a few hours.</p>
+
+              {/* Google Map — click-to-load facade (saves ~1MB+ of third-party JS/tiles) */}
+              {showMap ? (
+                <div className="rounded-xl overflow-hidden h-64 w-full">
+                  <iframe
+                    title="Makeovers by Bhuvita - Sector 37A, Chandigarh"
+                    src="https://maps.google.com/maps?q=Sector%2037A%2C%20Chandigarh&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl h-64 w-full bg-[#F5E6D3] flex flex-col items-center justify-center gap-3 text-center px-4">
+                  <MapPin className="h-8 w-8 text-[#8B6F47]" aria-hidden="true" />
+                  <p className="text-gray-700 font-medium">Sector 37A, Chandigarh</p>
+                  <a
+                    href={MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => { e.preventDefault(); setShowMap(true); }}
+                    className="bg-[#8B6F47] text-white px-6 py-2.5 rounded-full hover:bg-[#6B5637] transition active-press"
+                  >
+                    Load map
+                  </a>
+                  <a
+                    href={MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[#8B6F47] underline hover:text-[#6B5637] transition"
+                  >
+                    Open in Google Maps
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -929,33 +956,39 @@ const MakeoversByBhuvita = () => {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Follow Our Work</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Follow Our Latest Bridal Looks</h2>
             <a
-              href="https://www.instagram.com/makeoversbybhuvita"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-[#8B6F47] hover:text-[#6B5637] transition"
             >
-              <Instagram className="h-5 w-5" />
+              <Instagram className="h-5 w-5" aria-hidden="true" />
               @makeoversbybhuvita
             </a>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-            {[5, 11, 17, 24, 30, 36].map((imgNum) => (
+            {IG_TEASER_IDS.map((imgNum) => (
               <a
                 key={imgNum}
-                href="https://www.instagram.com/makeoversbybhuvita"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative group aspect-square overflow-hidden rounded-lg"
               >
-                <img
-                  src={getImagePath(`/portfolio/${imgNum}.jpeg`)}
-                  alt="Instagram"
-                  className="w-full h-full object-cover object-center group-hover:scale-110 group-hover:rotate-2 transition-transform duration-300"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                <picture>
+                  <source type="image/webp" srcSet={getImagePath(`/portfolio/${imgNum}-thumb.webp`)} />
+                  <img
+                    src={getImagePath(`/portfolio/${imgNum}.jpeg`)}
+                    alt={`${portfolioById[imgNum]?.description ?? 'Bridal makeup look'} — Makeovers by Bhuvita on Instagram`}
+                    width={400}
+                    height={400}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover object-center group-hover:scale-110 group-hover:rotate-2 transition-transform duration-300"
+                  />
+                </picture>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center" aria-hidden="true">
                   <Instagram className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </a>
@@ -963,6 +996,7 @@ const MakeoversByBhuvita = () => {
           </div>
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer className="bg-[#5C4033] text-white pt-12 pb-24 md:pb-12">
@@ -970,19 +1004,19 @@ const MakeoversByBhuvita = () => {
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             {/* Brand */}
             <div className="text-center md:text-left">
-              <h3 className="text-2xl font-script mb-3 text-[#D4A574]">Makeovers by Bhuvita</h3>
-              <p className="text-white/60 text-sm leading-relaxed">Professional bridal makeup artist creating stunning looks for your most special moments in Chandigarh, Mohali &amp; Panchkula.</p>
+              <p className="text-2xl font-script mb-3 text-[#D4A574]">Makeovers by Bhuvita</p>
+              <p className="text-white/70 text-sm leading-relaxed">Studio at Sector 37A, Chandigarh &mdash; subtle, skin-like bridal and party makeup, on venue across Chandigarh, Mohali, Panchkula, Zirakpur and Kharar.</p>
             </div>
 
             {/* Quick Links */}
             <div className="text-center">
               <h4 className="font-semibold text-[#D4A574] mb-3 text-sm uppercase tracking-wider">Quick Links</h4>
               <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-                <a href="#home" className="text-white/60 hover:text-white text-sm transition">Home</a>
-                <a href="#portfolio" className="text-white/60 hover:text-white text-sm transition">Portfolio</a>
-                <a href="#services" className="text-white/60 hover:text-white text-sm transition">Services</a>
-                <a href="#testimonials" className="text-white/60 hover:text-white text-sm transition">Testimonials</a>
-                <a href="#contact" className="text-white/60 hover:text-white text-sm transition">Contact</a>
+                <a href="#home" className="text-white/70 hover:text-white text-sm transition">Home</a>
+                <a href="#portfolio" className="text-white/70 hover:text-white text-sm transition">Portfolio</a>
+                <a href="#services" className="text-white/70 hover:text-white text-sm transition">Services</a>
+                <a href="#real-brides" className="text-white/70 hover:text-white text-sm transition">Real Brides</a>
+                <a href="#contact" className="text-white/70 hover:text-white text-sm transition">Contact</a>
               </div>
             </div>
 
@@ -990,108 +1024,122 @@ const MakeoversByBhuvita = () => {
             <div className="text-center md:text-right">
               <h4 className="font-semibold text-[#D4A574] mb-3 text-sm uppercase tracking-wider">Connect</h4>
               <div className="flex justify-center md:justify-end gap-4 mb-3">
-                <a href="https://www.instagram.com/makeoversbybhuvita" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
-                  <Instagram className="h-5 w-5 text-white/80" />
+                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
+                  <Instagram className="h-5 w-5 text-white/80" aria-hidden="true" />
                 </a>
-                <a href="https://wa.me/917888808231" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
-                  <MessageCircle className="h-5 w-5 text-white/80" />
+                <a href={waLink("Hi Bhuvita! I'm looking for bridal makeup on [date] at [venue/city]. Could you share availability and details?")} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
+                  <MessageCircle className="h-5 w-5 text-white/80" aria-hidden="true" />
                 </a>
-                <a href="tel:+917888808231" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
-                  <Phone className="h-5 w-5 text-white/80" />
+                <a href="tel:+917888808231" aria-label="Call +91 78888 08231" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
+                  <Phone className="h-5 w-5 text-white/80" aria-hidden="true" />
                 </a>
               </div>
-              <p className="text-white/50 text-sm">+91 78888 08231</p>
+              <p className="text-white/70 text-sm">+91 78888 08231</p>
             </div>
           </div>
 
           {/* Divider & Copyright */}
           <div className="border-t border-white/10 pt-6 text-center">
-            <p className="text-white/40 text-sm">&copy; 2025 Makeovers by Bhuvita. All rights reserved.</p>
+            <p className="text-white/70 text-sm" suppressHydrationWarning>&copy; {new Date().getFullYear()} Makeovers by Bhuvita. All rights reserved.</p>
           </div>
         </div>
       </footer>
 
       {/* Sticky WhatsApp CTA */}
       {/* Mobile: full-width bar at bottom */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#25D366] shadow-lg">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#128C4B] shadow-lg">
         <a
-          href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20makeup%20services"
+          href={WA_GENERAL}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 py-3 text-white font-semibold"
         >
-          <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Chat on WhatsApp
         </a>
       </div>
       {/* Desktop: floating button */}
       <a
-        href="https://wa.me/917888808231?text=Hi%20Bhuvita,%20I'm%20interested%20in%20your%20makeup%20services"
+        href={WA_GENERAL}
         target="_blank"
         rel="noopener noreferrer"
-        className="hidden md:flex fixed bottom-8 right-8 z-50 bg-[#25D366] text-white w-14 h-14 rounded-full items-center justify-center shadow-lg hover:bg-[#20BD5A] transition-colors group animate-pulse-slow"
-        title="Chat on WhatsApp"
+        aria-label="Chat on WhatsApp"
+        className="hidden md:flex fixed bottom-8 right-8 z-50 bg-[#128C4B] text-white w-14 h-14 rounded-full items-center justify-center shadow-lg hover:bg-[#0E7A40] transition-colors group animate-pulse-slow"
       >
-        <svg className="h-7 w-7 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <svg className="h-7 w-7 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       </a>
 
       {/* Portfolio Lightbox Modal */}
-      {lightboxImage !== null && (
+      {lightboxOpen && filteredImages[lightboxImage] && (
         <div
+          ref={lightboxRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Portfolio image viewer"
           className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
+          onTouchStart={handleLightboxTouchStart}
+          onTouchEnd={handleLightboxTouchEnd}
         >
           {/* Close button */}
           <button
+            ref={lightboxCloseRef}
             onClick={() => setLightboxImage(null)}
+            aria-label="Close image viewer"
             className="absolute top-4 right-4 text-white/80 hover:text-white z-10 p-2"
           >
-            <X className="h-8 w-8" />
+            <X className="h-8 w-8" aria-hidden="true" />
           </button>
 
           {/* Prev button */}
           {lightboxImage > 0 && (
             <button
-              onClick={(e) => { e.stopPropagation(); setLightboxImage(lightboxImage - 1); }}
+              onClick={(e) => { e.stopPropagation(); setLightboxImage((i) => Math.max(i - 1, 0)); }}
+              aria-label="Previous image"
               className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-black/30 hover:bg-black/50 p-3 rounded-full transition z-10"
             >
-              <ChevronLeft className="h-8 w-8" />
+              <ChevronLeft className="h-8 w-8" aria-hidden="true" />
             </button>
           )}
 
           {/* Image */}
-          <div className="max-w-5xl max-h-[85vh] relative" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={filteredImages[lightboxImage].url}
-              alt={filteredImages[lightboxImage].description}
-              className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
-            />
+          <div className="max-w-5xl max-h-[85dvh] relative" onClick={(e) => e.stopPropagation()}>
+            <picture>
+              <source
+                type="image/webp"
+                srcSet={filteredImages[lightboxImage].srcSet}
+                sizes="100vw"
+              />
+              <img
+                src={filteredImages[lightboxImage].url}
+                alt={filteredImages[lightboxImage].alt}
+                width={filteredImages[lightboxImage].width || 800}
+                height={filteredImages[lightboxImage].height || 1067}
+                decoding="async"
+                className="max-w-full max-h-[85dvh] w-auto h-auto object-contain rounded-xl shadow-2xl"
+              />
+            </picture>
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-xl">
               <p className="text-white text-lg font-semibold text-center">{filteredImages[lightboxImage].description}</p>
-              <p className="text-white/70 text-sm text-center">{lightboxImage + 1} / {filteredImages.length}</p>
+              <p className="text-white/70 text-sm text-center" aria-live="polite">{lightboxImage + 1} / {filteredImages.length}</p>
             </div>
           </div>
 
           {/* Next button */}
           {lightboxImage < filteredImages.length - 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); setLightboxImage(lightboxImage + 1); }}
+              onClick={(e) => { e.stopPropagation(); setLightboxImage((i) => Math.min(i + 1, filteredImages.length - 1)); }}
+              aria-label="Next image"
               className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-black/30 hover:bg-black/50 p-3 rounded-full transition z-10"
             >
-              <ChevronRight className="h-8 w-8" />
+              <ChevronRight className="h-8 w-8" aria-hidden="true" />
             </button>
           )}
         </div>
       )}
 
       {/* Back to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`hidden md:flex fixed bottom-8 left-8 z-50 w-12 h-12 rounded-full bg-[#8B6F47] text-white items-center justify-center shadow-lg hover:bg-[#6B5637] transition-all duration-300 hover-glow ${showBackToTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
-        title="Back to top"
-      >
-        <ArrowUp className="h-5 w-5" />
-      </button>
+      <BackToTopButton />
     </div>
   );
 };
