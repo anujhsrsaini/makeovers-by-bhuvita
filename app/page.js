@@ -451,7 +451,7 @@ const MakeoversByBhuvita = () => {
                     fetchPriority="high"
                     loading="eager"
                     decoding="async"
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-[center_20%]"
                   />
                 </picture>
               </div>
