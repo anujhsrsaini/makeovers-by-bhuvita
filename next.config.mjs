@@ -1,16 +1,14 @@
 /** @type {import('next').NextConfig} */
-const isProd = process.env.NODE_ENV === 'production';
-const basePath = isProd ? '/makeovers-by-bhuvita' : '';
-
+// Custom domain: makeoversbybhuvita.com — no basePath needed (root domain)
 const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true,
   },
-  basePath,
-  assetPrefix: isProd ? '/makeovers-by-bhuvita/' : '',
+  basePath: '',
+  assetPrefix: '',
   env: {
-    NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_BASE_PATH: '',
   },
 }
 

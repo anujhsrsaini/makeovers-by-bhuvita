@@ -1,4 +1,4 @@
-import { Inter, Dancing_Script } from 'next/font/google'
+import { Inter, Dancing_Script, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { faqs } from './faq-data'
 
@@ -11,17 +11,23 @@ const dancingScript = Dancing_Script({
   variable: '--font-script',
 })
 
-const isProd = process.env.NODE_ENV === 'production';
-const basePath = isProd ? '/makeovers-by-bhuvita' : '';
-const siteUrl = isProd ? 'https://anujhsrsaini.github.io/makeovers-by-bhuvita/' : 'http://localhost:3000/';
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-playfair',
+})
+
+const siteUrl = 'https://makeoversbybhuvita.com/';
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: 'Bridal Makeup Artist in Chandigarh | Makeovers by Bhuvita',
-  description: 'Subtle, skin-like bridal makeup by a UV Ghai-certified artist. Studio in Chandigarh, on-venue across Mohali & Panchkula. 200+ brides. Book on WhatsApp.',
+  description: 'UV Ghai-certified bridal makeup artist in Chandigarh specializing in subtle, skin-like makeup. Studio in Sector 37A + on-venue in Mohali, Panchkula & Zirakpur. 200+ brides. Book on WhatsApp.',
   openGraph: {
-    title: 'Subtle, Skin-Like Bridal Makeup in Chandigarh | Makeovers by Bhuvita',
-    description: 'Subtle, skin-like bridal makeup in Chandigarh, Mohali & Panchkula. UV Ghai-certified artist, 200+ happy brides. Chat on WhatsApp to book your consultation.',
+    title: 'Bridal Makeup Artist in Chandigarh | Makeovers by Bhuvita',
+    description: 'UV Ghai-certified bridal makeup artist in Chandigarh specializing in subtle, skin-like makeup. Studio in Sector 37A + on-venue in Mohali, Panchkula & Zirakpur. 200+ brides. Book on WhatsApp.',
     url: siteUrl,
     siteName: 'Makeovers by Bhuvita',
     locale: 'en_IN',
@@ -38,7 +44,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Bridal Makeup Artist in Chandigarh | Makeovers by Bhuvita',
-    description: 'Subtle, skin-like bridal makeup in Chandigarh, Mohali & Panchkula. 200+ happy brides. Chat on WhatsApp to book.',
+    description: 'UV Ghai-certified bridal makeup artist in Chandigarh specializing in subtle, skin-like makeup. Studio in Sector 37A + on-venue in Mohali, Panchkula & Zirakpur. 200+ brides. Book on WhatsApp.',
     images: [`${siteUrl}og-image.jpg`],
   },
   alternates: {
@@ -81,7 +87,7 @@ export default function RootLayout({ children }) {
       { '@type': 'City', name: 'Zirakpur' },
       { '@type': 'City', name: 'Kharar' },
     ],
-    priceRange: '₹8,000 - ₹80,000',
+    priceRange: '₹4,000 - ₹40,000',
     // NOTE: aggregateRating intentionally omitted until real, on-page reviews exist.
     // Google can penalize review markup not backed by visible reviews. Re-add once
     // real Google/client reviews are collected and displayed on the page.
@@ -93,35 +99,57 @@ export default function RootLayout({ children }) {
         // doesn't assert an exact price the page doesn't promise.
         {
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Bridal Makeup', description: 'Subtle, skin-like bridal makeup with hair styling and draping' },
-          priceSpecification: { '@type': 'PriceSpecification', minPrice: 25000, priceCurrency: 'INR' },
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Signature Bridal Makeup',
+            description: 'Subtle, skin-like bridal makeup with hair styling, zero-power lenses, lashes, veil setting, and royal lehenga & dupatta draping',
+          },
+          priceSpecification: { '@type': 'PriceSpecification', minPrice: 22000, priceCurrency: 'INR' },
         },
         {
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Pre-Wedding Function Makeup', description: 'Makeup and hair styling for mehendi, sangeet and haldi functions' },
-          price: '15000',
-          priceCurrency: 'INR',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Luxury Waterproof Bridal Makeup',
+            description: 'Tear-proof waterproof bridal makeup with hair styling, zero-power lenses, premium lashes, and heavy dupatta draping',
+          },
+          priceSpecification: { '@type': 'PriceSpecification', minPrice: 27000, priceCurrency: 'INR' },
         },
         {
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Party Makeup', description: 'Party, cocktail and reception makeup with hairstyling' },
-          priceSpecification: { '@type': 'PriceSpecification', minPrice: 8000, priceCurrency: 'INR' },
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Haldi & Mehendi Makeup',
+            description: 'Vibrant eye artistry, dewy radiant skin base, floral hair styling, lenses, lashes, and festive dupatta draping',
+          },
+          priceSpecification: { '@type': 'PriceSpecification', minPrice: 9000, priceCurrency: 'INR' },
         },
         {
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Bridal Package', description: 'Complete bridal package covering all wedding functions' },
-          price: '60000',
-          priceCurrency: 'INR',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Engagement & Reception Makeup',
+            description: 'Sculpted evening glam for gowns & western silhouettes, soft shimmer eye artistry, and modern Hollywood curls',
+          },
+          priceSpecification: { '@type': 'PriceSpecification', minPrice: 15000, priceCurrency: 'INR' },
         },
         {
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Outstation Bridal Makeup', description: 'Bridal makeup for weddings outside the Chandigarh Tricity; travel and stay charged separately' },
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Party Makeup',
+            description: 'Basic and HD party makeup with skin-like camera finish, hairstyling, lenses, lashes, and outfit draping',
+          },
+          priceSpecification: { '@type': 'PriceSpecification', minPrice: 4000, priceCurrency: 'INR' },
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Outstation Bridal Makeup',
+            description: 'Bridal makeup for weddings outside the Chandigarh Tricity; travel and stay charged separately',
+          },
           priceSpecification: { '@type': 'PriceSpecification', minPrice: 35000, priceCurrency: 'INR' },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Destination Wedding Makeup', description: 'Bridal makeup for destination weddings across India; travel and stay charged separately' },
-          priceSpecification: { '@type': 'PriceSpecification', minPrice: 80000, priceCurrency: 'INR' },
         },
       ],
     },
@@ -145,7 +173,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="sitemap" type="application/xml" title="Sitemap" href={`${basePath}/sitemap.xml`} />
+        <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -155,7 +183,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       </head>
-      <body className={`${inter.className} ${dancingScript.variable}`}>{children}</body>
+      <body className={`${inter.className} ${dancingScript.variable} ${playfair.variable}`}>{children}</body>
     </html>
   )
 }

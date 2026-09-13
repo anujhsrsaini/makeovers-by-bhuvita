@@ -7,6 +7,12 @@
   }
 }
 
+/* Bridal Typography: Playfair Display + Cursive Script */
+.font-playfair {
+  font-family: var(--font-playfair), 'Playfair Display', Didot, Georgia, serif;
+}
+
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
@@ -93,6 +99,15 @@ html {
   transform: scale(0.95);
 }
 
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Respect reduced-motion preferences: kill decorative animation/transitions */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -106,3 +121,4 @@ html {
     scroll-behavior: auto;
   }
 }
+
