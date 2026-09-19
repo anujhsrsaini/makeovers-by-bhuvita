@@ -137,6 +137,9 @@ export default function MakeupArtistInMohaliPage() {
       { '@type': 'City', name: 'Mohali' },
       { '@type': 'AdministrativeArea', name: 'SAS Nagar' },
       { '@type': 'City', name: 'Chandigarh' },
+      { '@type': 'City', name: 'Panchkula' },
+      { '@type': 'City', name: 'Zirakpur' },
+      { '@type': 'City', name: 'Kharar' },
     ],
     offers: [
       {
@@ -268,12 +271,12 @@ export default function MakeupArtistInMohaliPage() {
       <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Doorstep Convenience
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               On-Venue Bridal &amp; Occasion Makeup Across Mohali
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               No need to navigate wedding-day traffic or stress over salon delays.
               Bhuvita brings a full bridal vanity experience directly to your wedding venue or home.
@@ -341,12 +344,12 @@ export default function MakeupArtistInMohaliPage() {
       <section id="pricing" className="py-16 sm:py-24 bg-[#FAF7F5] scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Mohali Makeup Pricing
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               Services Tailored for Mohali Brides &amp; Families
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               Transparent packages with no hidden studio markup. Premium international brands guaranteed.
             </p>
@@ -467,12 +470,12 @@ export default function MakeupArtistInMohaliPage() {
       <section className="py-16 sm:py-24 bg-[#FAF7F5]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Mohali Bookings &amp; Logistics
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
               Frequently Asked Questions &bull; Mohali
-            </p>
+            </h2>
           </div>
 
           <FaqAccordion faqs={mohaliFaqs} />

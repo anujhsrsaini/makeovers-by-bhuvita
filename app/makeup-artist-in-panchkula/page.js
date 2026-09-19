@@ -137,6 +137,10 @@ export default function MakeupArtistInPanchkulaPage() {
       { '@type': 'City', name: 'Panchkula' },
       { '@type': 'AdministrativeArea', name: 'Panchkula District' },
       { '@type': 'City', name: 'Pinjore' },
+      { '@type': 'City', name: 'Chandigarh' },
+      { '@type': 'City', name: 'Mohali' },
+      { '@type': 'City', name: 'Zirakpur' },
+      { '@type': 'City', name: 'Kharar' },
     ],
     offers: [
       {
@@ -268,12 +272,12 @@ export default function MakeupArtistInPanchkulaPage() {
       <section id="panchkula-venues" className="py-16 sm:py-24 bg-white scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               On-Venue Artistry
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               Serving Panchkula Sectors &amp; Wedding Resorts
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               Whether you are hosting an intimate home ceremony in Sector 20 or a grand reception at a Pinjore resort,
               Bhuvita arrives with punctuality and professional vanity care.
@@ -340,12 +344,12 @@ export default function MakeupArtistInPanchkulaPage() {
       <section className="py-16 sm:py-24 bg-[#FAF7F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Artistry That Respects Your Skin
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               Panchkula Bridal &amp; Occasion Packages
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               We focus on micro-layering and luxury formulations that ensure longevity without making you feel weighed down.
             </p>
@@ -442,12 +446,12 @@ export default function MakeupArtistInPanchkulaPage() {
       <section className="py-16 sm:py-24 bg-[#FAF7F5]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Panchkula Bookings
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
               Frequently Asked Questions &bull; Panchkula
-            </p>
+            </h2>
           </div>
 
           <FaqAccordion faqs={panchkulaFaqs} />

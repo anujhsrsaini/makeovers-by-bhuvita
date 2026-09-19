@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { X, ChevronLeft, ChevronRight, Sparkles, MessageCircle } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Sparkles, MessageCircle, Play } from 'lucide-react';
 import portfolioData from '../../public/portfolio/portfolio.json';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -26,6 +26,7 @@ export default function PortfolioShowcase({
     .map((img) => ({
       ...img,
       url: getImagePath(`/portfolio/${img.file}`),
+      videoUrl: img.video ? getImagePath(`/portfolio/${img.video}`) : null,
       fileBase: img.file.replace(/\.[^.]+$/, ''),
       webp800: getImagePath(`/portfolio/${img.file.replace(/\.[^.]+$/, '')}-800.webp`),
       webp1200: getImagePath(`/portfolio/${img.file.replace(/\.[^.]+$/, '')}-1200.webp`),
@@ -116,13 +117,22 @@ export default function PortfolioShowcase({
 
               {/* View pill overlay */}
               <div className="absolute top-3 right-3 bg-black/50 hover:bg-black/70 backdrop-blur-xs text-white text-xs px-3 py-1 rounded-full flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
-                <Sparkles className="w-3.5 h-3.5 text-[#D4A574]" aria-hidden="true" />
-                <span>View Full</span>
+                {item.videoUrl ? (
+                  <>
+                    <Play className="w-3.5 h-3.5 fill-[#D4A574] text-[#D4A574]" aria-hidden="true" />
+                    <span>Watch Video</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3.5 h-3.5 text-[#D4A574]" aria-hidden="true" />
+                    <span>View Full</span>
+                  </>
+                )}
               </div>
 
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 text-white">
                 <span className="text-[11px] uppercase tracking-wider text-[#D4A574] font-semibold block mb-0.5">
-                  {item.category}
+                  {item.category} {item.videoUrl ? '• HD Video' : ''}
                 </span>
                 <p className="font-playfair text-lg font-semibold leading-tight drop-shadow-xs">
                   {item.description}
@@ -169,26 +179,39 @@ export default function PortfolioShowcase({
             </button>
           )}
 
-          {/* Active Image and Caption */}
+          {/* Active Image or Video and Caption */}
           <div
             className="max-w-4xl max-h-[85vh] relative flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative overflow-hidden rounded-xl shadow-2xl max-h-[72vh] flex items-center justify-center">
-              <picture>
-                <source
-                  type="image/webp"
-                  srcSet={`${currentItem.webp800} 800w, ${currentItem.webp1200} 1200w`}
-                  sizes="100vw"
-                />
-                <img
-                  src={currentItem.url}
-                  alt={`${currentItem.description} — Makeovers by Bhuvita`}
-                  width={currentItem.width || 800}
-                  height={currentItem.height || 1067}
+            <div className="relative overflow-hidden rounded-xl shadow-2xl max-h-[72vh] flex items-center justify-center bg-black">
+              {currentItem.videoUrl ? (
+                <video
+                  key={currentItem.videoUrl}
+                  src={currentItem.videoUrl}
+                  poster={currentItem.url}
+                  controls
+                  autoPlay
+                  loop
+                  playsInline
                   className="max-h-[72vh] w-auto object-contain rounded-xl"
                 />
-              </picture>
+              ) : (
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcSet={`${currentItem.webp800} 800w, ${currentItem.webp1200} 1200w`}
+                    sizes="100vw"
+                  />
+                  <img
+                    src={currentItem.url}
+                    alt={`${currentItem.description} — Makeovers by Bhuvita`}
+                    width={currentItem.width || 800}
+                    height={currentItem.height || 1067}
+                    className="max-h-[72vh] w-auto object-contain rounded-xl"
+                  />
+                </picture>
+              )}
             </div>
 
             {/* Bottom Caption bar with direct WhatsApp inquiry */}

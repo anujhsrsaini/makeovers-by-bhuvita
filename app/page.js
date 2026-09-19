@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Menu, X, Instagram, MessageCircle, Phone, Star, ChevronLeft, ChevronRight, ChevronDown, Calendar, Palette, Heart, Clock, Sparkles, ArrowUp, MapPin, Car, Building2, Plane, CheckCircle2, Info } from 'lucide-react';
+import { Menu, X, Instagram, MessageCircle, Phone, Star, ChevronLeft, ChevronRight, ChevronDown, Calendar, Palette, Heart, Clock, Sparkles, ArrowUp, MapPin, Car, Building2, Plane, CheckCircle2, Info, Play } from 'lucide-react';
 import portfolioData from '../public/portfolio/portfolio.json';
 import { faqs } from './faq-data';
 import AnnouncementBar from './components/AnnouncementBar';
@@ -67,6 +67,7 @@ const fileBase = (file) => file.replace(/\.[^.]+$/, '');
 const portfolioImages = portfolioData.map((img) => ({
   ...img,
   url: getImagePath(`/portfolio/${img.file}`),
+  videoUrl: img.video ? getImagePath(`/portfolio/${img.video}`) : null,
   srcSet: `${getImagePath(`/portfolio/${fileBase(img.file)}-800.webp`)} 800w, ${getImagePath(`/portfolio/${fileBase(img.file)}-1200.webp`)} 1200w`,
   alt: `${img.description} — bridal makeup by Makeovers by Bhuvita, Chandigarh`,
 }));
@@ -618,49 +619,89 @@ function InfiniteSpotlightCarousel({ section, images, onImageClick }) {
                   : 'shadow-lg hover:opacity-90'
               }`}
             >
-              <picture>
-                <source
-                  type="image/webp"
-                  srcSet={img.srcSet}
-                  sizes="(max-width: 640px) 250px, (max-width: 768px) 310px, 360px"
+              {img.videoUrl && isCenter ? (
+                <video
+                  key={img.videoUrl}
+                  src={img.videoUrl}
+                  poster={img.url}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="w-full h-full object-cover object-center"
                 />
-                <img
-                  src={img.url}
-                  alt={img.alt}
-                  width={img.width || 800}
-                  height={img.height || 1067}
-                  loading={isVisible ? 'eager' : 'lazy'}
-                  decoding="async"
-                  className={`w-full h-full object-cover object-center transition-transform duration-700 ${
-                    isCenter ? 'group-hover:scale-105' : ''
-                  }`}
-                />
-              </picture>
+              ) : (
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcSet={img.srcSet}
+                    sizes="(max-width: 640px) 250px, (max-width: 768px) 310px, 360px"
+                  />
+                  <img
+                    src={img.url}
+                    alt={img.alt}
+                    width={img.width || 800}
+                    height={img.height || 1067}
+                    loading={isVisible ? 'eager' : 'lazy'}
+                    decoding="async"
+                    className={`w-full h-full object-cover object-center transition-transform duration-700 ${
+                      isCenter ? 'group-hover:scale-105' : ''
+                    }`}
+                  />
+                </picture>
+              )}
+
+              {/* Video indicator on non-center cards */}
+              {!isCenter && img.videoUrl && (
+                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-xs text-white p-2 rounded-full shadow-md border border-white/25 z-10">
+                  <Play className="w-3.5 h-3.5 fill-white text-white translate-x-0.5" aria-hidden="true" />
+                </div>
+              )}
 
               {/* Center Look Badges & Overlay */}
               {isCenter && (
                 <>
-                  {/* Expand Full Screen Pill */}
-                  <div className="absolute top-3.5 right-3.5 bg-black/45 hover:bg-black/65 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-md border border-white/20 transition-all">
-                    <Sparkles className="w-3.5 h-3.5 text-[#D4A574]" aria-hidden="true" />
-                    <span>View Full</span>
+                  {/* Action Pill */}
+                  <div className="absolute top-3.5 right-3.5 bg-black/50 hover:bg-black/70 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-md border border-white/20 transition-all">
+                    {img.videoUrl ? (
+                      <>
+                        <Play className="w-3.5 h-3.5 fill-[#D4A574] text-[#D4A574]" aria-hidden="true" />
+                        <span>Watch Video</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5 text-[#D4A574]" aria-hidden="true" />
+                        <span>View Full</span>
+                      </>
+                    )}
                   </div>
 
                   {/* Counter Pill */}
-                  <div className="absolute top-3.5 left-3.5 bg-black/45 backdrop-blur-md text-white/90 text-xs font-semibold px-2.5 py-1 rounded-full shadow-md border border-white/10">
-                    {(currentIndex % total) + 1} / {total}
+                  <div className="absolute top-3.5 left-3.5 bg-black/55 backdrop-blur-md text-white/90 text-xs font-semibold px-2.5 py-1 rounded-full shadow-md border border-white/15 flex items-center gap-1.5">
+                    {img.videoUrl && (
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+                    )}
+                    <span>{img.videoUrl ? 'Video Reel • ' : ''}{(currentIndex % total) + 1} / {total}</span>
                   </div>
 
                   {/* Bottom glassmorphic description */}
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/55 to-transparent pt-12 pb-5 px-5 text-white">
-                    <span className="text-[11px] font-semibold tracking-wider uppercase text-[#D4A574] block mb-0.5">
-                      {img.category}
-                    </span>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-[11px] font-semibold tracking-wider uppercase text-[#D4A574]">
+                        {img.category}
+                      </span>
+                      {img.videoUrl && (
+                        <span className="text-[10px] bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 font-semibold px-1.5 py-0.2 rounded-sm uppercase tracking-wider">
+                          HD Video
+                        </span>
+                      )}
+                    </div>
                     <h4 className="text-base sm:text-lg font-playfair font-semibold leading-snug drop-shadow-sm">
                       {img.description}
                     </h4>
                     <p className="text-white/70 text-xs mt-1 flex items-center gap-1">
-                      <span>Tap to view in full resolution</span>
+                      <span>{img.videoUrl ? 'Tap to play in high definition' : 'Tap to view in full resolution'}</span>
                       <span aria-hidden="true">&rarr;</span>
                     </p>
                   </div>
@@ -714,10 +755,8 @@ function InfiniteSpotlightCarousel({ section, images, onImageClick }) {
 // ---------------------------------------------------------------------------
 
 const MakeoversByBhuvita = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
   const [lightboxState, setLightboxState] = useState(null); // { list: Image[], index: number }
-  const [scrolled, setScrolled] = useState(false);
   const [animatedStats, setAnimatedStats] = useState(STAT_TARGETS);
   const [statsAnimDone, setStatsAnimDone] = useState(false);
   const [showMap, setShowMap] = useState(false);
@@ -760,14 +799,6 @@ const MakeoversByBhuvita = () => {
 
   // Content is visible by default; hide-then-reveal only after revealReady
   const reveal = (inView) => (revealReady && !inView ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0');
-
-  // Nav shadow on scroll (boolean — only flips at the threshold)
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Animated stats counter (real values are in the static HTML; the count-up
   // only runs when the bar scrolls into view and motion is allowed)
@@ -1627,108 +1658,10 @@ const MakeoversByBhuvita = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#5C4033] text-white pt-12 pb-24 md:pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-            {/* Brand */}
-            <div className="text-center sm:text-left">
-              <p className="text-2xl font-script mb-3 text-[#D4A574]">Makeovers by Bhuvita</p>
-              <p className="text-white/70 text-sm leading-relaxed">Studio at Sector 37A, Chandigarh &mdash; subtle, skin-like bridal and party makeup, on venue across Chandigarh, Mohali, Panchkula, Zirakpur and Kharar.</p>
-            </div>
+      <Footer />
 
-            {/* Quick Links */}
-            <div className="text-center sm:text-left">
-              <h4 className="font-semibold text-[#D4A574] mb-3 text-sm uppercase tracking-wider">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#home" className="text-white/70 hover:text-white transition inline-block">Home</a></li>
-                <li><a href="#about" className="text-white/70 hover:text-white transition inline-block">About</a></li>
-                <li><a href="#portfolio" className="text-white/70 hover:text-white transition inline-block">Portfolio</a></li>
-                <li><a href="#services" className="text-white/70 hover:text-white transition inline-block">Services</a></li>
-                <li><a href="#real-brides" className="text-white/70 hover:text-white transition inline-block">Real Brides</a></li>
-                <li><a href="#contact" className="text-white/70 hover:text-white transition inline-block">Contact</a></li>
-              </ul>
-            </div>
-
-            {/* Locations & Services */}
-            <div className="text-center sm:text-left">
-              <h4 className="font-semibold text-[#D4A574] mb-3 text-sm uppercase tracking-wider">Locations &amp; Services</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/bridal-makeup-chandigarh" className="text-white/70 hover:text-white transition inline-block">
-                    Bridal Makeup Chandigarh
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/makeup-artist-in-mohali" className="text-white/70 hover:text-white transition inline-block">
-                    Makeup Artist in Mohali
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/makeup-artist-in-panchkula" className="text-white/70 hover:text-white transition inline-block">
-                    Makeup Artist in Panchkula
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/party-makeup-chandigarh" className="text-white/70 hover:text-white transition inline-block">
-                    Party Makeup Chandigarh
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/pricing" className="text-white/70 hover:text-white transition inline-block">
-                    Pricing &amp; Packages
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Social & Contact */}
-            <div className="text-center sm:text-left lg:text-right">
-              <h4 className="font-semibold text-[#D4A574] mb-3 text-sm uppercase tracking-wider">Connect</h4>
-              <div className="flex justify-center lg:justify-end gap-4 mb-3">
-                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
-                  <Instagram className="h-5 w-5 text-white/80" aria-hidden="true" />
-                </a>
-                <a href={waLink("Hi Bhuvita! I'm looking for bridal makeup on [date] at [venue/city]. Could you share availability and details?")} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
-                  <MessageCircle className="h-5 w-5 text-white/80" aria-hidden="true" />
-                </a>
-                <a href="tel:+917888808231" aria-label="Call +91 78888 08231" className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#D4A574]/30 flex items-center justify-center transition">
-                  <Phone className="h-5 w-5 text-white/80" aria-hidden="true" />
-                </a>
-              </div>
-              <p className="text-white/70 text-sm">+91 78888 08231</p>
-            </div>
-          </div>
-
-          {/* Divider & Copyright */}
-          <div className="border-t border-white/10 pt-6 text-center">
-            <p className="text-white/70 text-sm" suppressHydrationWarning>&copy; {new Date().getFullYear()} Makeovers by Bhuvita. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-
-      {/* Sticky WhatsApp CTA */}
-      {/* Mobile: full-width bar at bottom */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#25D366] shadow-lg">
-        <a
-          href={WA_GENERAL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 py-3 text-white font-semibold"
-        >
-          <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Chat on WhatsApp
-        </a>
-      </div>
-      {/* Desktop: floating button */}
-      <a
-        href={WA_GENERAL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
-        className="hidden md:flex fixed bottom-8 right-8 z-50 bg-[#25D366] text-white w-14 h-14 rounded-full items-center justify-center shadow-lg hover:bg-[#1DA851] transition-colors group animate-pulse-slow"
-      >
-        <svg className="h-7 w-7 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      </a>
+      {/* Floating WhatsApp CTA */}
+      <FloatingWhatsApp customMessage="Hi Bhuvita! I'm looking for bridal makeup on [date] at [venue/city]. Could you share availability and details?" />
 
       {/* Portfolio Lightbox Modal */}
       {lightboxOpen && currentLightboxImage && (
@@ -1766,31 +1699,46 @@ const MakeoversByBhuvita = () => {
             </button>
           )}
 
-          {/* Image */}
-          <div className="max-w-5xl max-h-[85dvh] relative" onClick={(e) => e.stopPropagation()}>
-            <picture>
-              <source
-                type="image/webp"
-                srcSet={currentLightboxImage.srcSet}
-                sizes="100vw"
+          {/* Image or Video */}
+          <div className="max-w-5xl max-h-[85dvh] relative flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            {currentLightboxImage.videoUrl ? (
+              <video
+                key={currentLightboxImage.videoUrl}
+                src={currentLightboxImage.videoUrl}
+                poster={currentLightboxImage.url}
+                controls
+                autoPlay
+                loop
+                playsInline
+                className="max-w-full max-h-[78dvh] w-auto h-auto object-contain rounded-xl shadow-2xl bg-black"
               />
-              <img
-                src={currentLightboxImage.url}
-                alt={currentLightboxImage.alt}
-                width={currentLightboxImage.width || 800}
-                height={currentLightboxImage.height || 1067}
-                decoding="async"
-                className="max-w-full max-h-[85dvh] w-auto h-auto object-contain rounded-xl shadow-2xl"
-              />
-            </picture>
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 rounded-b-xl text-center">
-              <span className="text-xs uppercase tracking-wider text-[#D4A574] font-medium block mb-1">
-                {currentLightboxImage.category}
-              </span>
-              <p className="text-white text-base sm:text-lg font-semibold">{currentLightboxImage.description}</p>
-              <p className="text-white/70 text-xs sm:text-sm mt-0.5" aria-live="polite">
-                {lightboxState.index + 1} / {lightboxState.list.length}
-              </p>
+            ) : (
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={currentLightboxImage.srcSet}
+                  sizes="100vw"
+                />
+                <img
+                  src={currentLightboxImage.url}
+                  alt={currentLightboxImage.alt}
+                  width={currentLightboxImage.width || 800}
+                  height={currentLightboxImage.height || 1067}
+                  decoding="async"
+                  className="max-w-full max-h-[85dvh] w-auto h-auto object-contain rounded-xl shadow-2xl"
+                />
+              </picture>
+            )}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 rounded-b-xl text-center pointer-events-none">
+              <div className="pointer-events-auto">
+                <span className="text-xs uppercase tracking-wider text-[#D4A574] font-medium block mb-1">
+                  {currentLightboxImage.category} {currentLightboxImage.videoUrl ? '• HD Video Look' : ''}
+                </span>
+                <p className="text-white text-base sm:text-lg font-semibold">{currentLightboxImage.description}</p>
+                <p className="text-white/70 text-xs sm:text-sm mt-0.5" aria-live="polite">
+                  {lightboxState.index + 1} / {lightboxState.list.length}
+                </p>
+              </div>
             </div>
           </div>
 

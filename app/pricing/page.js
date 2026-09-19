@@ -401,12 +401,12 @@ export default function PricingPage() {
       <section id="all-packages" className="py-16 sm:py-24 bg-white scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Complete Price List
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               Makeup Services &amp; Packages Breakdown
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               Explore individual service costs, multi-function bridal packages, and outstation destination options.
             </p>
@@ -483,12 +483,12 @@ export default function PricingPage() {
       <section className="py-16 sm:py-24 bg-[#FAF7F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Honest Breakdown
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               What Factors Affect Your Quote?
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               We believe in total transparency. Here is how your personalized makeup quote is calculated.
             </p>
@@ -639,12 +639,12 @@ export default function PricingPage() {
       <section className="py-16 sm:py-24 bg-[#FAF7F5]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Common Questions
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
               Frequently Asked Questions &bull; Pricing &amp; Bookings
-            </p>
+            </h2>
           </div>
 
           <FaqAccordion faqs={pricingFaqs} />

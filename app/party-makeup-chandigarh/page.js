@@ -263,12 +263,12 @@ export default function PartyMakeupChandigarhPage() {
       <section id="party-looks" className="py-16 sm:py-24 bg-white scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Bespoke Styling For Every Celebration
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               Signature Occasion Styles by Bhuvita
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               Each occasion demands its own mood. We curate your look to match your outfit silhouette, lighting, and ceremony vibe.
             </p>
@@ -330,12 +330,12 @@ export default function PartyMakeupChandigarhPage() {
       <section className="py-16 sm:py-24 bg-[#FAF7F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Transparent Charges
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
               Party Makeup Packages in Chandigarh
-            </p>
+            </h2>
             <p className="text-gray-600 text-base sm:text-lg">
               Book individual studio sessions in Sector 37A or enjoy on-venue convenience for your entire bridesmaid party.
             </p>
@@ -465,12 +465,12 @@ export default function PartyMakeupChandigarhPage() {
       <section className="py-16 sm:py-24 bg-[#FAF7F5]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
               Got Questions?
-            </h2>
-            <p className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900">
               Frequently Asked Questions &bull; Party Makeup
-            </p>
+            </h2>
           </div>
 
           <FaqAccordion faqs={partyFaqs} />
