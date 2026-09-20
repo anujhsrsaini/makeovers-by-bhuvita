@@ -1,0 +1,8 @@
+# Robots.txt for Makeovers by Bhuvita
+# https://makeoversbybhuvita.com
+
+User-agent: *
+Allow: /
+
+# XML Sitemap
+Sitemap: https://makeoversbybhuvita.com/sitemap.xml

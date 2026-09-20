@@ -1,6 +1,5 @@
 import { Inter, Dancing_Script, Playfair_Display } from 'next/font/google'
 import './globals.css'
-import { faqs } from './faq-data'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -158,18 +157,6 @@ export default function RootLayout({ children }) {
     ],
   };
 
-  // Built from app/faq-data.js — the same array the page renders — so schema
-  // answers always match visible text (Google FAQ rich-result requirement).
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
-  };
-
   return (
     <html lang="en">
       <head>
@@ -177,10 +164,6 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       </head>
       <body className={`${inter.className} ${dancingScript.variable} ${playfair.variable}`}>{children}</body>

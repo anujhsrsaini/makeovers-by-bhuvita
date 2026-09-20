@@ -904,6 +904,21 @@ const MakeoversByBhuvita = () => {
         imageSizes="(max-width: 767px) 92vw, 45vw"
         fetchPriority="high"
       />
+      {/* FAQPage JSON-LD — lives here on the homepage where visible FAQs are rendered */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqs.map((f) => ({
+              '@type': 'Question',
+              name: f.q,
+              acceptedAnswer: { '@type': 'Answer', text: f.a },
+            })),
+          }),
+        }}
+      />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[70] focus:bg-white focus:text-[#8B6F47] focus:px-4 focus:py-2 focus:rounded-full focus:shadow-lg">
         Skip to content
       </a>

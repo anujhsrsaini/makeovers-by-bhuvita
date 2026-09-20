@@ -21,10 +21,7 @@ import {
   Sparkle,
 } from 'lucide-react';
 
-const isProd = process.env.NODE_ENV === 'production';
-const siteUrl = isProd
-  ? 'https://anujhsrsaini.github.io/makeovers-by-bhuvita'
-  : 'http://localhost:3000';
+const siteUrl = 'https://makeoversbybhuvita.com';
 const canonicalUrl = `${siteUrl}/party-makeup-chandigarh`;
 
 const WHATSAPP_NUMBER = '917888808231';
