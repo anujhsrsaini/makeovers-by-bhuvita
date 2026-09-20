@@ -1,4 +1,5 @@
 import { Inter, Dancing_Script, Playfair_Display } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -189,6 +190,56 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Google Analytics 4 (GA4) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-SNCYZKT98V"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-SNCYZKT98V', {
+              page_path: window.location.pathname,
+            });
+
+            // Automatic Lead Capture Tracking for WhatsApp & Phone Clicks
+            if (typeof window !== 'undefined') {
+              document.addEventListener('click', function(e) {
+                var target = e.target.closest('a');
+                if (!target) return;
+                var href = target.getAttribute('href') || '';
+                if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1) {
+                  var isBridal = href.indexOf('Bridal') !== -1 || href.indexOf('bridal') !== -1;
+                  var leadValue = isBridal ? 22000 : 4000;
+                  gtag('event', 'whatsapp_click', {
+                    event_category: 'Lead Capture',
+                    event_label: (target.innerText || 'WhatsApp CTA').trim().substring(0, 100),
+                    link_url: href,
+                    value: leadValue,
+                    currency: 'INR'
+                  });
+                  gtag('event', 'generate_lead', {
+                    currency: 'INR',
+                    value: leadValue
+                  });
+                } else if (href.indexOf('tel:') !== -1) {
+                  gtag('event', 'phone_click', {
+                    event_category: 'Direct Call',
+                    phone_number: '+917888808231',
+                    value: 15000,
+                    currency: 'INR'
+                  });
+                  gtag('event', 'generate_lead', {
+                    currency: 'INR',
+                    value: 15000
+                  });
+                }
+              }, { passive: true });
+            }
+          `}
+        </Script>
       </head>
       <body className={`${inter.className} ${dancingScript.variable} ${playfair.variable}`}>{children}</body>
     </html>
