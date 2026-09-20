@@ -208,7 +208,13 @@ export default function PricingPage() {
   const offerCatalogSchema = {
     '@context': 'https://schema.org',
     '@type': 'OfferCatalog',
+    '@id': `${canonicalUrl}#catalog`,
     name: 'Makeovers by Bhuvita Makeup Pricing & Packages',
+    provider: {
+      '@type': 'BeautySalon',
+      '@id': `${siteUrl}/#business`,
+      name: 'Makeovers by Bhuvita',
+    },
     itemListElement: [
       {
         '@type': 'Offer',

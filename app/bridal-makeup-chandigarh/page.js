@@ -357,7 +357,7 @@ export default function BridalMakeupChandigarhPage() {
           </div>
 
           <div className="overflow-x-auto shadow-sm rounded-2xl border border-gray-200">
-            <table className="w-full text-left text-sm text-gray-700 border-collapse">
+            <table className="w-full min-w-[640px] text-left text-sm text-gray-700 border-collapse">
               <thead className="bg-[#FAF7F5] text-gray-900 uppercase text-xs font-semibold">
                 <tr>
                   <th scope="col" className="px-6 py-4 border-b border-gray-200">Feature / Parameter</th>
