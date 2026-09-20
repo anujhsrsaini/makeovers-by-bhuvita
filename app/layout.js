@@ -54,6 +54,19 @@ export const metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: ['/favicon.ico'],
+  },
+  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({ children }) {
@@ -65,6 +78,7 @@ export default function RootLayout({ children }) {
     alternateName: 'Bhuvita Makeup Artist Chandigarh',
     description: 'UV Ghai-certified makeup artist in Chandigarh specialising in subtle, skin-like bridal makeup. Studio in Sector 37A plus on-venue services across Chandigarh, Mohali and Panchkula, with outstation bridal bookings across India.',
     url: siteUrl,
+    logo: `${siteUrl}logo.png`,
     image: `${siteUrl}og-image.jpg`,
     telephone: '+91-78888-08231',
     address: {
@@ -185,6 +199,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon-48x48.png" type="image/png" sizes="48x48" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="manifest" href="/site.webmanifest" />
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
         {/* Preload Hero LCP Image for Mobile & Desktop */}
         <link

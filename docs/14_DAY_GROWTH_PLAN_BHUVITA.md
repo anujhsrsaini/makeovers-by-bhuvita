@@ -71,7 +71,7 @@ To prevent automated algorithmic suspensions by Google's anti-spam filters:
    `Sector 37A, Chandigarh, 160036, India`  
    *(Note: Mark "Yes" to "Do you also provide services outside this location?" and configure service areas: Chandigarh, Mohali, Panchkula, Zirakpur, Kharar, and New Chandigarh).*
 6. **Phone Number:** `+91 78888 08231` (Matches website and WhatsApp).
-7. **Website URL:** `https://anujhsrsaini.github.io/makeovers-by-bhuvita/` (or custom domain `https://makeoversbybhuvita.com`).
+7. **Website URL:** `https://makeoversbybhuvita.com/` (official custom domain).
 
 ---
 
@@ -82,7 +82,7 @@ To prevent automated algorithmic suspensions by Google's anti-spam filters:
 
 #### Pre-Video Preparation Checklist
 - [ ] Studio entrance door unlocked and key in hand.
-- [ ] Sector 37A street board or house/building number clearly visible outside.
+- [ ] Sector 37A street board clearly visible outside.
 - [ ] Physical branding placed outside door (Acrylic nameplate or banner: "Makeovers by Bhuvita - Private Makeup Studio").
 - [ ] Makeup vanity clean, fully lit (ring lights / Hollywood mirrors turned ON).
 - [ ] Professional kit displayed: UV Ghai Certification hanging on wall, professional makeup palettes (MAC, Charlotte Tilbury, Huda Beauty, NARS, Dior), brush sanitizing station.
@@ -473,7 +473,7 @@ Pin Code:           160036
 Country:            India
 Primary Phone:      +91 78888 08231
 WhatsApp Business:  +91 78888 08231
-Website URL:        https://anujhsrsaini.github.io/makeovers-by-bhuvita/
+Website URL:        https://makeoversbybhuvita.com/
 Official Email:     makeoversbybhuvita@gmail.com
 Instagram:          https://www.instagram.com/makeoversbybhuvita
 ```

@@ -927,34 +927,21 @@ const MakeoversByBhuvita = () => {
         <div className="absolute top-20 -left-32 w-96 h-96 rounded-full bg-[#D4A574]/10 blur-3xl pointer-events-none" aria-hidden="true" />
         <div className="absolute bottom-10 -right-20 w-80 h-80 rounded-full bg-[#8B6F47]/8 blur-3xl pointer-events-none" aria-hidden="true" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="text-center md:text-left">
-              <h1 className="text-3xl sm:text-5xl md:text-6xl font-playfair font-semibold text-gray-800 mb-6 leading-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 relative z-10">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
+            {/* 1. Header Text (H1) */}
+            <div className="order-1 md:col-start-1 md:row-start-1 text-center md:text-left">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-playfair font-semibold text-gray-800 leading-tight">
                 Bridal Makeup Artist in Chandigarh for Your{' '}
                 <span className="font-script font-normal text-gradient-gold lowercase tracking-normal text-4xl sm:text-6xl md:text-7xl inline-block ml-1">
                   Dream Day
                 </span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8 font-sans">
-                UV Ghai&ndash;certified bridal makeup artist in Chandigarh, Mohali &amp; Panchkula &mdash; specialising in <span className="font-semibold text-[#8B6F47]">subtle, skin-like makeup</span> that enhances your natural beauty for your special day
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <a href={WA_GENERAL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold px-8 py-3 rounded-full hover:bg-[#1DA851] transition transform hover:scale-105 shadow-md active-press">
-                  <MessageCircle className="h-5 w-5" aria-hidden="true" />
-                  Chat on WhatsApp
-                </a>
-                <a href="#portfolio" className="border-2 border-[#8B6F47] text-[#8B6F47] px-8 py-3 rounded-full hover:bg-[#8B6F47] hover:text-white transition transform hover:scale-105 active-press">
-                  View Portfolio
-                </a>
-              </div>
-              <p className="text-sm text-gray-500 mt-4">Replies within a few hours on WhatsApp</p>
             </div>
-            <div className="relative">
-              <div className="w-full h-96 md:h-[600px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-[#D4A574]/30">
+
+            {/* 2. Hero Image — Mobile: order-2 (directly below H1 without scrolling!), Desktop: Right Column */}
+            <div className="order-2 md:order-none md:col-start-2 md:row-start-1 md:row-span-3 relative w-full max-w-sm sm:max-w-md md:max-w-none mx-auto my-2 md:my-0">
+              <div className="w-full h-72 sm:h-80 md:h-[600px] rounded-2xl overflow-hidden shadow-xl md:shadow-2xl ring-2 ring-[#D4A574]/30">
                 <picture>
                   <source
                     type="image/webp"
@@ -975,12 +962,36 @@ const MakeoversByBhuvita = () => {
               </div>
               {/* Shimmer border accent */}
               <div className="absolute -inset-1 rounded-2xl animate-shimmer opacity-30 -z-10" aria-hidden="true" />
-              <div className="absolute bottom-4 left-4 sm:-bottom-6 sm:-left-6 bg-white p-3 sm:p-4 rounded-xl shadow-lg animate-float">
+              <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 md:-bottom-6 md:-left-6 bg-white/95 backdrop-blur-xs p-2.5 sm:p-3 md:p-4 rounded-xl shadow-lg animate-float">
                 <div className="flex items-center gap-2">
-                  <Heart className="h-5 w-5 fill-current text-red-500" aria-hidden="true" />
-                  <span className="font-semibold">200+ Happy Brides</span>
+                  <Heart className="h-4 sm:h-5 w-4 sm:w-5 fill-current text-red-500" aria-hidden="true" />
+                  <span className="text-xs sm:text-sm md:text-base font-semibold">200+ Happy Brides</span>
                 </div>
               </div>
+            </div>
+
+            {/* 3. Subtitle Paragraph — Mobile: order-3, Desktop: Left Column row-start-2 */}
+            <div className="order-3 md:col-start-1 md:row-start-2 text-center md:text-left">
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 font-sans leading-relaxed">
+                UV Ghai&ndash;certified bridal makeup artist in Chandigarh, Mohali &amp; Panchkula &mdash; specialising in <span className="font-semibold text-[#8B6F47]">subtle, skin-like makeup</span> that enhances your natural beauty for your special day
+              </p>
+            </div>
+
+            {/* 4. CTAs and Replies Note — Mobile: order-4, Desktop: Left Column row-start-3 */}
+            <div className="order-4 md:col-start-1 md:row-start-3 text-center md:text-left">
+              <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 justify-center md:justify-start">
+                <a href={WA_GENERAL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold px-6 sm:px-8 py-3 rounded-full hover:bg-[#1DA851] transition transform hover:scale-105 shadow-md active-press text-sm sm:text-base">
+                  <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                  Chat on WhatsApp
+                </a>
+                <a href="#portfolio" className="border-2 border-[#8B6F47] text-[#8B6F47] px-6 sm:px-8 py-3 rounded-full hover:bg-[#8B6F47] hover:text-white transition transform hover:scale-105 active-press text-sm sm:text-base">
+                  View Portfolio
+                </a>
+              </div>
+              <p className="text-xs sm:text-sm text-gray-500 mt-3 md:mt-4">Replies within a few hours on WhatsApp</p>
             </div>
           </div>
         </div>
