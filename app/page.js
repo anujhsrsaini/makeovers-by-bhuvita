@@ -643,7 +643,7 @@ function InfiniteSpotlightCarousel({ section, images, onImageClick }) {
                     alt={img.alt}
                     width={img.width || 800}
                     height={img.height || 1067}
-                    loading={isVisible ? 'eager' : 'lazy'}
+                    loading="lazy"
                     decoding="async"
                     className={`w-full h-full object-cover object-center transition-transform duration-700 ${
                       isCenter ? 'group-hover:scale-105' : ''
@@ -895,15 +895,6 @@ const MakeoversByBhuvita = () => {
   return (
     <div className="min-h-screen bg-[#FAF7F5]">
       {/* Skip link for keyboard users */}
-      {/* Hero LCP preload — lives here (not layout) so the 404 page doesn't
-          download a hero it never renders; sizes matches the hero <picture>. */}
-      <link
-        rel="preload"
-        as="image"
-        imageSrcSet={`${getImagePath('/top-hero-828.webp')} 828w, ${getImagePath('/top-hero-1200.webp')} 1200w, ${getImagePath('/top-hero-1600.webp')} 1600w`}
-        imageSizes="(max-width: 767px) 92vw, 45vw"
-        fetchPriority="high"
-      />
       {/* FAQPage JSON-LD — lives here on the homepage where visible FAQs are rendered */}
       <script
         type="application/ld+json"

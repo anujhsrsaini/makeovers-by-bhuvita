@@ -186,6 +186,16 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+        {/* Preload Hero LCP Image for Mobile & Desktop */}
+        <link
+          rel="preload"
+          as="image"
+          type="image/webp"
+          href="/top-hero-828.webp"
+          imageSrcSet="/top-hero-828.webp 828w, /top-hero-1200.webp 1200w, /top-hero-1600.webp 1600w"
+          imageSizes="(max-width: 767px) 92vw, 45vw"
+          fetchPriority="high"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
