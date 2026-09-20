@@ -33,14 +33,14 @@ const WA_PARTY = waLink(
 export const metadata = {
   title: 'Party Makeup Artist in Chandigarh | Makeovers by Bhuvita',
   description:
-    'Book flawless party makeup in Chandigarh for cocktails, sangeet, mehendi & receptions. Basic from ₹4,000, HD from ₹5,000 (Studio) / ₹6,000 (Venue). Book on WhatsApp.',
+    'Party makeup in Chandigarh for cocktails, sangeet & receptions. Basic from ₹4,000, HD from ₹5,000 studio / ₹6,000 on-venue. Lenses & lashes included. Book now.',
   alternates: {
     canonical: canonicalUrl,
   },
   openGraph: {
     title: 'Party Makeup Artist in Chandigarh | Makeovers by Bhuvita',
     description:
-      'Chic, camera-ready party makeup in Chandigarh by UV Ghai-certified artist Bhuvita. Basic from ₹4,000, HD from ₹5,000 (Studio) / ₹6,000 (Venue). Book on WhatsApp.',
+      'Party makeup in Chandigarh for cocktails, sangeet & receptions. Basic from ₹4,000, HD from ₹5,000 studio / ₹6,000 on-venue. Lenses & lashes included. Book now.',
     url: canonicalUrl,
     siteName: 'Makeovers by Bhuvita',
     locale: 'en_IN',
@@ -120,6 +120,7 @@ export default function PartyMakeupChandigarhPage() {
       'Chic, lightweight party and cocktail makeup in Chandigarh by Makeovers by Bhuvita. Basic from ₹4,000, HD from ₹5,000 (Studio) / ₹6,000 (Venue).',
     provider: {
       '@type': 'BeautySalon',
+      '@id': `${siteUrl}/#business`,
       name: 'Makeovers by Bhuvita',
       telephone: '+91-78888-08231',
       address: {
@@ -199,7 +200,7 @@ export default function PartyMakeupChandigarhPage() {
               Effortlessly chic, sweat-proof, and camera-ready party glam that lasts all night without feeling
               heavy. Certified by <strong className="text-gray-900 font-semibold">UV Ghai</strong>, Bhuvita
               crafts customized makeup and hair styling for bridesmaids, sisters, mothers, and party guests
-              at her Sector 37A studio or on-venue across Chandigarh Tricity.
+              at her Sector 37A studio or on-venue across Chandigarh, <Link href="/makeup-artist-in-mohali" className="text-[#8B6F47] font-semibold hover:underline">Mohali</Link>, and <Link href="/makeup-artist-in-panchkula" className="text-[#8B6F47] font-semibold hover:underline">Panchkula</Link>. We also offer signature <Link href="/bridal-makeup-chandigarh" className="text-[#8B6F47] font-semibold underline">bridal makeup</Link> and complete rates on our <Link href="/pricing" className="text-[#8B6F47] font-semibold underline">pricing page</Link>.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">

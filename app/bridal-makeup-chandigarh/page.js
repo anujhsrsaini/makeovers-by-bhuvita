@@ -31,14 +31,14 @@ const WA_BRIDAL = waLink(
 );
 
 export const metadata = {
-  title: 'Bridal Makeup in Chandigarh | Makeovers by Bhuvita',
+  title: 'Bridal Makeup Chandigarh | Skin-Like Base | Bhuvita',
   description:
-    'Looking for subtle, skin-like bridal makeup in Chandigarh? UV Ghai-certified artist Bhuvita crafts timeless, radiant bridal looks with luxury products. View packages & book on WhatsApp.',
+    'Subtle, skin-like bridal makeup in Chandigarh by UV Ghai-certified Bhuvita. 100% luxury kit (Charlotte Tilbury, MAC). Packages from ₹22k. Book on WhatsApp.',
   alternates: {
     canonical: canonicalUrl,
   },
   openGraph: {
-    title: 'Bridal Makeup in Chandigarh | Makeovers by Bhuvita',
+    title: 'Bridal Makeup Chandigarh | Skin-Like Base | Bhuvita',
     description:
       'Subtle, skin-like bridal makeup in Chandigarh by UV Ghai-certified artist Bhuvita. Charlotte Tilbury, MAC, Huda Beauty. 200+ brides. Book on WhatsApp.',
     url: canonicalUrl,
@@ -56,7 +56,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bridal Makeup in Chandigarh | Makeovers by Bhuvita',
+    title: 'Bridal Makeup Chandigarh | Skin-Like Base | Bhuvita',
     description:
       'Subtle, skin-like bridal makeup in Chandigarh. UV Ghai certified, 200+ brides. View packages & book on WhatsApp.',
     images: [`${siteUrl}/og-image.jpg`],
@@ -121,6 +121,7 @@ export default function BridalMakeupChandigarhPage() {
       'Subtle, skin-like bridal makeup in Chandigarh by UV Ghai-certified artist Bhuvita. Luxury kit, hair styling, lenses, lashes, veil draping & jewelry setting included.',
     provider: {
       '@type': 'BeautySalon',
+      '@id': `${siteUrl}/#business`,
       name: 'Makeovers by Bhuvita',
       telephone: '+91-78888-08231',
       address: {
@@ -211,9 +212,9 @@ export default function BridalMakeupChandigarhPage() {
             <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-8">
               Enhancing your authentic radiance for your wedding day. Certified by{' '}
               <strong className="text-gray-900 font-semibold">UV Ghai</strong>, Bhuvita crafts timeless,
-              breathable bridal looks free of heavy masks or ghostly flashback. Studio in{' '}
-              <span className="text-[#8B6F47] font-semibold">Sector 37A</span> and on-venue services
-              across Chandigarh, Mohali &amp; Panchkula.
+              breathable bridal looks free of heavy masks or ghostly flashback. Private studio in{' '}
+              <span className="text-[#8B6F47] font-semibold">Sector 37A</span> plus doorstep on-venue services
+              across Chandigarh, <Link href="/makeup-artist-in-mohali" className="text-[#8B6F47] font-semibold hover:underline">Mohali</Link> &amp; <Link href="/makeup-artist-in-panchkula" className="text-[#8B6F47] font-semibold hover:underline">Panchkula</Link>. Review our <Link href="/pricing" className="text-[#8B6F47] font-semibold underline hover:text-[#725a38]">bridal makeup charges</Link> below.
             </p>
 
             {/* Trust Badges */}
@@ -336,6 +337,69 @@ export default function BridalMakeupChandigarhPage() {
                 Precision double dupatta pleating, heavy cancan lehenga placement, matha patti pinning, and custom hair ornamentation for seamless elegance from head to toe.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HD vs Airbrush Makeup Comparison Table */}
+      <section className="py-16 sm:py-24 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+              Bridal Knowledge Guide
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+              HD Makeup vs Airbrush Makeup: Which is Right for You?
+            </h2>
+            <p className="text-gray-600 text-base sm:text-lg">
+              Many Chandigarh brides are confused between HD and Airbrush techniques. Here is how Bhuvita&apos;s skin-like HD artistry compares to traditional airbrush applications for Indian weddings.
+            </p>
+          </div>
+
+          <div className="overflow-x-auto shadow-sm rounded-2xl border border-gray-200">
+            <table className="w-full text-left text-sm text-gray-700 border-collapse">
+              <thead className="bg-[#FAF7F5] text-gray-900 uppercase text-xs font-semibold">
+                <tr>
+                  <th scope="col" className="px-6 py-4 border-b border-gray-200">Feature / Parameter</th>
+                  <th scope="col" className="px-6 py-4 border-b border-gray-200 bg-[#8B6F47]/10 text-[#8B6F47]">
+                    Bhuvita&apos;s HD Skin-Like Artistry (Signature)
+                  </th>
+                  <th scope="col" className="px-6 py-4 border-b border-gray-200">Traditional Airbrush Makeup</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                <tr>
+                  <td className="px-6 py-4 font-semibold text-gray-900">Application Technique</td>
+                  <td className="px-6 py-4 bg-[#FAF7F5]/50">Precision hand blending using micro-layering brushes and damp beauty blenders.</td>
+                  <td className="px-6 py-4">Sprayed through an air compressor gun in a fine mist across the face.</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 font-semibold text-gray-900">Finish &amp; Skin Texture</td>
+                  <td className="px-6 py-4 bg-[#FAF7F5]/50 text-emerald-800 font-medium">Breathable, soft radiance that looks like natural, hydrated skin up close.</td>
+                  <td className="px-6 py-4">Ultra-matte porcelain finish; can emphasize dry flakiness or severe skin texture.</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 font-semibold text-gray-900">Best Suited For</td>
+                  <td className="px-6 py-4 bg-[#FAF7F5]/50">All skin types: Normal, Dry, Combination, Sensitive, and Textured Indian skin.</td>
+                  <td className="px-6 py-4">Extremely oily skin; less forgiving on dehydrated or mature skin types.</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 font-semibold text-gray-900">4K / 8K Camera Performance</td>
+                  <td className="px-6 py-4 bg-[#FAF7F5]/50">Zero white flash flashback, diffuse light bounce, cinematic skin realism.</td>
+                  <td className="px-6 py-4">Smooth in studio flashes, but risk of feeling mask-like in daylight Anand Karaj ceremonies.</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 font-semibold text-gray-900">Touch-up &amp; Tear Resistance</td>
+                  <td className="px-6 py-4 bg-[#FAF7F5]/50">Tear-resistant formulation; effortlessly touched up without cracking or creasing.</td>
+                  <td className="px-6 py-4">Water-resistant, but difficult to blend or re-apply if rubbed or streaked by heavy tears.</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 font-semibold text-gray-900">Tricity Price Point</td>
+                  <td className="px-6 py-4 bg-[#FAF7F5]/50 font-bold text-gray-900">₹22,000 – ₹27,000 (All-inclusive luxury kit &amp; draping)</td>
+                  <td className="px-6 py-4">₹28,000 – ₹35,000+ (Often carries steep equipment surcharges)</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -482,6 +546,91 @@ export default function BridalMakeupChandigarhPage() {
                   <span>Inquire for Wedding Dates</span>
                 </a>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6-Month Pre-Bridal Skincare Timeline */}
+      <section className="py-16 sm:py-24 bg-[#FAF7F5] border-t border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="block text-xs uppercase tracking-widest text-[#8B6F47] font-semibold mb-2">
+              Skin-First Bridal Philosophy
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-gray-900 mb-4">
+              Bhuvita&apos;s 6-Month Pre-Bridal Skin Preparation Timeline
+            </h2>
+            <p className="text-gray-600 text-base sm:text-lg">
+              Flawless, subtle makeup begins months before the wedding day. Follow our recommended countdown for peak wedding radiance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* 6 Months Out */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#8B6F47] bg-[#8B6F47]/10 px-3 py-1 rounded-full w-fit mb-3">
+                6 Months Out
+              </div>
+              <h3 className="font-playfair text-xl font-bold text-gray-900 mb-2">Dermatology &amp; Barrier Health</h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Address stubborn acne, hyperpigmentation, or hormonal imbalances with a dermatologist. Lock in a daily broad-spectrum SPF 50+ sunscreen habit.
+              </p>
+            </div>
+
+            {/* 4 Months Out */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#8B6F47] bg-[#8B6F47]/10 px-3 py-1 rounded-full w-fit mb-3">
+                4 Months Out
+              </div>
+              <h3 className="font-playfair text-xl font-bold text-gray-900 mb-2">Hydration &amp; Hair Care</h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Begin gentle hydrating treatments (Hydrafacial or mild lactic acid peels). Start deep conditioning masks to build hair tensile strength for bridal buns.
+              </p>
+            </div>
+
+            {/* 2 Months Out */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#8B6F47] bg-[#8B6F47]/10 px-3 py-1 rounded-full w-fit mb-3">
+                2 Months Out
+              </div>
+              <h3 className="font-playfair text-xl font-bold text-gray-900 mb-2">Trial Session &amp; Tone Match</h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Schedule your bridal trial with Bhuvita. Finalize your dupatta drapery style, test zero-power lenses, and freeze your active skincare ingredients.
+              </p>
+            </div>
+
+            {/* 1 Month Out */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#8B6F47] bg-[#8B6F47]/10 px-3 py-1 rounded-full w-fit mb-3">
+                1 Month Out
+              </div>
+              <h3 className="font-playfair text-xl font-bold text-gray-900 mb-2">Internal Glow &amp; Sleep</h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Increase water intake to 3 liters daily. Avoid introducing any new cosmetic products. Practice sleep hygiene to prevent under-eye puffiness and dark circles.
+              </p>
+            </div>
+
+            {/* 1 Week Out */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#8B6F47] bg-[#8B6F47]/10 px-3 py-1 rounded-full w-fit mb-3">
+                1 Week Out
+              </div>
+              <h3 className="font-playfair text-xl font-bold text-gray-900 mb-2">Threading &amp; Gentle Prep</h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Complete eyebrow threading and facial waxing 4–5 days in advance to allow any redness to subside. Zero harsh physical walnut scrubs or chemical peeling.
+              </p>
+            </div>
+
+            {/* Wedding Day Morning */}
+            <div className="bg-white rounded-2xl p-6 border-2 border-[#8B6F47] shadow-md relative overflow-hidden">
+              <div className="text-xs font-bold uppercase tracking-wider text-white bg-[#8B6F47] px-3 py-1 rounded-full w-fit mb-3">
+                Wedding Day
+              </div>
+              <h3 className="font-playfair text-xl font-bold text-gray-900 mb-2">Clean Skin &amp; Relax</h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Wash your face with a mild gel cleanser and leave it completely bare. Bhuvita will execute lymphatic drainage, targeted priming, and micro-layering upon arrival.
+              </p>
             </div>
           </div>
         </div>

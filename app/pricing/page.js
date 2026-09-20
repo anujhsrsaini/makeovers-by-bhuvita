@@ -33,16 +33,16 @@ const WA_PRICING = waLink(
 );
 
 export const metadata = {
-  title: 'Bridal Makeup Charges in Chandigarh | Price List | Makeovers by Bhuvita',
+  title: 'Bridal Makeup Charges Chandigarh | Price List | Bhuvita',
   description:
-    'Explore transparent bridal and party makeup charges in Chandigarh by Makeovers by Bhuvita. Bridal packages from ₹22,000 (Studio) / ₹25,000 (Venue), party makeup from ₹4,000. No hidden fees.',
+    'Transparent bridal & party makeup charges in Chandigarh. Bridal from ₹22,000; party from ₹4,000. Full kit breakdown & no hidden fees. Check packages on WhatsApp.',
   alternates: {
     canonical: canonicalUrl,
   },
   openGraph: {
-    title: 'Bridal Makeup Charges in Chandigarh | Price List | Makeovers by Bhuvita',
+    title: 'Bridal Makeup Charges Chandigarh | Price List | Bhuvita',
     description:
-      'Complete transparent makeup charges and packages in Chandigarh. Bridal from ₹22,000 (Studio) / ₹25,000 (Venue), Party from ₹4,000. No hidden surcharges.',
+      'Transparent bridal & party makeup charges in Chandigarh. Bridal from ₹22,000; party from ₹4,000. Full kit breakdown & no hidden fees. Check packages on WhatsApp.',
     url: canonicalUrl,
     siteName: 'Makeovers by Bhuvita',
     locale: 'en_IN',
@@ -58,7 +58,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bridal Makeup Charges in Chandigarh | Price List | Makeovers by Bhuvita',
+    title: 'Bridal Makeup Charges Chandigarh | Price List | Bhuvita',
     description:
       'Transparent bridal and party makeup packages in Chandigarh. View full price list & book on WhatsApp.',
     images: [`${siteUrl}/og-image.jpg`],
@@ -336,8 +336,8 @@ export default function PricingPage() {
 
             <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-8">
               Honest, upfront pricing for bridal, pre-wedding, and party makeup. No unexpected salon surcharges,
-              no extra fees for basic false lashes or draping, and strictly 100% authentic international luxury products.
-              Certified by <strong className="text-gray-900 font-semibold">UV Ghai</strong>.
+              no extra fees for lenses or draping, and strictly 100% authentic international luxury products.
+              Certified by <strong className="text-gray-900 font-semibold">UV Ghai</strong>. Learn more about our signature <Link href="/bridal-makeup-chandigarh" className="text-[#8B6F47] font-semibold underline">bridal makeup in Chandigarh</Link>, arrange on-venue visits in <Link href="/makeup-artist-in-mohali" className="text-[#8B6F47] font-semibold hover:underline">Mohali</Link> or <Link href="/makeup-artist-in-panchkula" className="text-[#8B6F47] font-semibold hover:underline">Panchkula</Link>, or explore <Link href="/party-makeup-chandigarh" className="text-[#8B6F47] font-semibold hover:underline">party makeup rates</Link>.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">

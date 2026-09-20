@@ -30,16 +30,16 @@ const WA_PANCHKULA = waLink(
 );
 
 export const metadata = {
-  title: 'Makeup Artist in Panchkula | Subtle Bridal Looks | Makeovers by Bhuvita',
+  title: 'Makeup Artist in Panchkula | Bridal & Party | Bhuvita',
   description:
-    'Looking for a luxury bridal and party makeup artist in Panchkula? UV Ghai-certified artist Bhuvita provides on-venue service across Sector 20, Sector 11, MDC & Pinjore banquets.',
+    'Luxury bridal & party makeup in Panchkula by UV Ghai-certified Bhuvita. On-venue across Sector 20, MDC & Pinjore resorts. Subtle glam. Book on WhatsApp.',
   alternates: {
     canonical: canonicalUrl,
   },
   openGraph: {
-    title: 'Makeup Artist in Panchkula | Subtle Bridal Looks | Makeovers by Bhuvita',
+    title: 'Makeup Artist in Panchkula | Bridal & Party | Bhuvita',
     description:
-      'Subtle, skin-like bridal makeup in Panchkula by UV Ghai-certified artist Bhuvita. On-venue luxury services across Sector 20, Sector 11, MDC & Pinjore resorts.',
+      'Luxury bridal & party makeup in Panchkula by UV Ghai-certified Bhuvita. On-venue across Sector 20, MDC & Pinjore resorts. Subtle glam. Book on WhatsApp.',
     url: canonicalUrl,
     siteName: 'Makeovers by Bhuvita',
     locale: 'en_IN',
@@ -55,7 +55,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Makeup Artist in Panchkula | Subtle Bridal Looks | Makeovers by Bhuvita',
+    title: 'Makeup Artist in Panchkula | Bridal & Party | Bhuvita',
     description:
       'Subtle, skin-like bridal makeup in Panchkula. On-venue services across Sector 20, MDC, Pinjore. Book on WhatsApp.',
     images: [`${siteUrl}/og-image.jpg`],
@@ -119,6 +119,7 @@ export default function MakeupArtistInPanchkulaPage() {
       'Premier makeup artist for Panchkula brides. Subtle, skin-like makeup, on-venue service across Sector 20, Sector 11, MDC & Pinjore wedding resorts.',
     provider: {
       '@type': 'BeautySalon',
+      '@id': `${siteUrl}/#business`,
       name: 'Makeovers by Bhuvita',
       telephone: '+91-78888-08231',
       address: {
@@ -207,8 +208,8 @@ export default function MakeupArtistInPanchkulaPage() {
             <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-8">
               Subtle, luminous bridal elegance and contemporary occasion makeup for Panchkula&apos;s most
               discerning brides. Certified by <strong className="text-gray-900 font-semibold">UV Ghai</strong>,
-              Bhuvita brings high-end international cosmetics and relaxing on-venue vanity setups directly
-              to your home or resort across Sector 20, Sector 11, MDC, and Pinjore.
+              Bhuvita brings high-end international cosmetics and on-venue vanity setups directly
+              to your home or resort across Sector 20, Sector 11, MDC, and Pinjore. Discover our <Link href="/bridal-makeup-chandigarh" className="text-[#8B6F47] font-semibold underline">bridal makeup in Chandigarh</Link>, view <Link href="/party-makeup-chandigarh" className="text-[#8B6F47] font-semibold hover:underline">party makeup</Link>, or check the full <Link href="/pricing" className="text-[#8B6F47] font-semibold underline">price list</Link>.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">

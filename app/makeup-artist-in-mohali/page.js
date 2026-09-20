@@ -30,16 +30,16 @@ const WA_MOHALI = waLink(
 );
 
 export const metadata = {
-  title: 'Best Makeup Artist in Mohali | Bridal & Party | Makeovers by Bhuvita',
+  title: 'Makeup Artist in Mohali | Bridal & Party | Bhuvita',
   description:
-    'Top-rated bridal and party makeup artist in Mohali. Studio minutes away in Sector 37A plus on-venue doorstep services across Phase 3B2, Phase 7, Aerocity & Sector 70. Book on WhatsApp.',
+    'Bridal & party makeup artist serving Mohali. On-venue doorstep styling across Phase 3B2, 7, Aerocity & Sector 70. Subtle, skin-like finish. Chat on WhatsApp.',
   alternates: {
     canonical: canonicalUrl,
   },
   openGraph: {
-    title: 'Best Makeup Artist in Mohali | Bridal & Party | Makeovers by Bhuvita',
+    title: 'Makeup Artist in Mohali | Bridal & Party | Bhuvita',
     description:
-      'Looking for the best makeup artist in Mohali? UV Ghai-certified artist Bhuvita offers subtle, skin-like bridal & party makeup. On-venue service across all Mohali phases.',
+      'Bridal & party makeup artist serving Mohali. On-venue doorstep styling across Phase 3B2, 7, Aerocity & Sector 70. Subtle, skin-like finish. Chat on WhatsApp.',
     url: canonicalUrl,
     siteName: 'Makeovers by Bhuvita',
     locale: 'en_IN',
@@ -55,7 +55,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Best Makeup Artist in Mohali | Bridal & Party | Makeovers by Bhuvita',
+    title: 'Makeup Artist in Mohali | Bridal & Party | Bhuvita',
     description:
       'Subtle, skin-like bridal & party makeup in Mohali. On-venue doorstep service across Phase 3B2, Phase 7, Aerocity, Homeland Heights.',
     images: [`${siteUrl}/og-image.jpg`],
@@ -119,6 +119,7 @@ export default function MakeupArtistInMohaliPage() {
       'Premier makeup artist serving Mohali with subtle, skin-like bridal and party makeup. On-venue services across Phase 3B2, Phase 7, Aerocity, and Sector 70.',
     provider: {
       '@type': 'BeautySalon',
+      '@id': `${siteUrl}/#business`,
       name: 'Makeovers by Bhuvita',
       telephone: '+91-78888-08231',
       address: {
@@ -206,8 +207,8 @@ export default function MakeupArtistInMohaliPage() {
             <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-8">
               Luxury bridal transformations and radiant occasion makeup for Mohali&apos;s most stylish brides.
               Certified by <strong className="text-gray-900 font-semibold">UV Ghai</strong>, Bhuvita delivers
-              weightless, skin-like artistry at her Sector 37A studio or directly at your hotel or residence in
-              Phase 3B2, Phase 7, Sector 70, Aerocity, and beyond.
+              weightless, skin-like artistry at her Sector 37A studio or doorstep on-venue across
+              Phase 3B2, Phase 7, Sector 70, and Aerocity. Explore our <Link href="/bridal-makeup-chandigarh" className="text-[#8B6F47] font-semibold underline">bridal makeup in Chandigarh</Link>, browse <Link href="/party-makeup-chandigarh" className="text-[#8B6F47] font-semibold hover:underline">party makeup options</Link>, or check our <Link href="/pricing" className="text-[#8B6F47] font-semibold underline">transparent pricing list</Link>.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">

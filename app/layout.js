@@ -23,10 +23,10 @@ const siteUrl = 'https://makeoversbybhuvita.com/';
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: 'Bridal Makeup Artist in Chandigarh | Makeovers by Bhuvita',
-  description: 'UV Ghai-certified bridal makeup artist in Chandigarh specializing in subtle, skin-like makeup. Studio in Sector 37A + on-venue in Mohali, Panchkula & Zirakpur. 200+ brides. Book on WhatsApp.',
+  description: 'UV Ghai-certified bridal makeup artist in Chandigarh. Subtle, skin-like finish. Sector 37A studio & on-venue across Tricity. 200+ brides. Chat on WhatsApp.',
   openGraph: {
     title: 'Bridal Makeup Artist in Chandigarh | Makeovers by Bhuvita',
-    description: 'UV Ghai-certified bridal makeup artist in Chandigarh specializing in subtle, skin-like makeup. Studio in Sector 37A + on-venue in Mohali, Panchkula & Zirakpur. 200+ brides. Book on WhatsApp.',
+    description: 'UV Ghai-certified bridal makeup artist in Chandigarh. Subtle, skin-like finish. Sector 37A studio & on-venue across Tricity. 200+ brides. Chat on WhatsApp.',
     url: siteUrl,
     siteName: 'Makeovers by Bhuvita',
     locale: 'en_IN',
@@ -43,7 +43,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Bridal Makeup Artist in Chandigarh | Makeovers by Bhuvita',
-    description: 'UV Ghai-certified bridal makeup artist in Chandigarh specializing in subtle, skin-like makeup. Studio in Sector 37A + on-venue in Mohali, Panchkula & Zirakpur. 200+ brides. Book on WhatsApp.',
+    description: 'UV Ghai-certified bridal makeup artist in Chandigarh. Subtle, skin-like finish. Sector 37A studio & on-venue across Tricity. 200+ brides. Chat on WhatsApp.',
     images: [`${siteUrl}og-image.jpg`],
   },
   alternates: {
@@ -61,6 +61,7 @@ export default function RootLayout({ children }) {
     '@type': 'BeautySalon',
     '@id': `${siteUrl}#business`,
     name: 'Makeovers by Bhuvita',
+    alternateName: 'Bhuvita Makeup Artist Chandigarh',
     description: 'UV Ghai-certified makeup artist in Chandigarh specialising in subtle, skin-like bridal makeup. Studio in Sector 37A plus on-venue services across Chandigarh, Mohali and Panchkula, with outstation bridal bookings across India.',
     url: siteUrl,
     image: `${siteUrl}og-image.jpg`,
@@ -75,18 +76,41 @@ export default function RootLayout({ children }) {
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 30.7139,
-      longitude: 76.7489,
+      latitude: 30.7423,
+      longitude: 76.7551,
     },
     hasMap: 'https://www.google.com/maps/search/?api=1&query=Makeovers+by+Bhuvita+Sector+37A+Chandigarh',
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '09:00',
+        closes: '19:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Monday',
+        opens: '10:00',
+        closes: '17:00',
+      },
+    ],
+    founder: {
+      '@type': 'Person',
+      name: 'Bhuvita',
+      jobTitle: 'Master Bridal Makeup Artist & Founder',
+      knowsAbout: ['Bridal Makeup', 'HD Makeup', 'Airbrush Makeup', 'Dupatta Draping', 'Skin Prep'],
+      award: 'Certified by Master Educator UV Ghai',
+    },
     areaServed: [
-      { '@type': 'City', name: 'Chandigarh' },
-      { '@type': 'City', name: 'Mohali' },
-      { '@type': 'City', name: 'Panchkula' },
+      { '@type': 'City', name: 'Chandigarh', sameAs: 'https://en.wikipedia.org/wiki/Chandigarh' },
+      { '@type': 'City', name: 'Mohali', sameAs: 'https://en.wikipedia.org/wiki/Mohali' },
+      { '@type': 'City', name: 'Panchkula', sameAs: 'https://en.wikipedia.org/wiki/Panchkula' },
       { '@type': 'City', name: 'Zirakpur' },
       { '@type': 'City', name: 'Kharar' },
     ],
     priceRange: '₹4,000 - ₹40,000',
+    currenciesAccepted: 'INR',
+    paymentAccepted: 'Cash, UPI, Credit Card, Bank Transfer',
     // NOTE: aggregateRating intentionally omitted until real, on-page reviews exist.
     // Google can penalize review markup not backed by visible reviews. Re-add once
     // real Google/client reviews are collected and displayed on the page.
